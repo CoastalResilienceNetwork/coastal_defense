@@ -69,21 +69,15 @@ define([
 			   pluginDirectory: "plugins/coastal_defense",
 			   width: 835,
 			   height: 625,
-			   
+			   _state: {},
+			   _deactivated: false,
 			   
                activate: function () {
-					/*if(this.cdTool.parameters.windowOpen == true){
-						if (registry.byId('cd_profileLocationsCheckbox')) {
-						console.log(registry.byId('cd_profileLocationsCheckbox'));
-						registry.byId("cd_profileLocationsCheckbox").checked ? this.cdTool.profileLandPoints.show() : this.cdTool.profileLandPoints.hide() ;	
-						registry.byId("cd_marshExtentCheckbox").checked ? this.cdTool.marshLayer.show() : this.cdTool.marshLayer.hide() ;	
-						registry.byId("cd_dikeCheckbox").checked ? this.cdTool.dikeLayer.show() : this.cdTool.dikeLayer.hide() ;		
-						registry.byId("cd_elevationCheckbox").checked ? this.cdTool.contours.show() : this.cdTool.contours.hide() ;
-						}						
-					}*/
 					self = this;
 					var showInfoGraphic = localStorage.getItem(this.toolbarName + " showinfographic");
-					if (( showInfoGraphic === "true") || (showInfoGraphic == null)) {
+					console.log(showInfoGraphic);
+					console.log(this._state);
+					if (( showInfoGraphic === "true" || showInfoGraphic == null) && _.isEmpty(this._state) && !this._deactivated) {
 					   var pluginId = this.container.parentNode.parentNode.id;
 					   var introPanelButton = dojo.query("#" + pluginId + " .plugin-infographic  [widgetid*='Button']")[0];
 					   dojo.connect(introPanelButton, "onclick", function() {
@@ -91,22 +85,15 @@ define([
 					   });
 					} else {
 						this.cdTool.showTool(this.cdTool);
+						if (!_.isEmpty(this._state)) {
+							this.cdTool.setState(this._state);
+						}
+						this._deactivated = false;
 					}
-					//t = this.cdTool
+					cdTool = this.cdTool;
 			   },
 			   
                deactivate: function () { 
-			   
-			   },
-			   
-               hibernate: function () { 
-
-					/* if (this.cdTool.mangroveLayer) {
-						this.cdTool.mangroveLayer.hide();
-					}
-					if (this.cdTool.reefLayer) {
-						this.cdTool.reefLayer.hide();
-					} */
 					if (this.cdTool.profileTransect){
 						this.cdTool.profileTransect.hide();
 					}
@@ -116,7 +103,20 @@ define([
 					if (this.cdTool.habitatLayer){
 						this.cdTool.habitatLayer.hide();
 					}
-			   		     
+					this._deactivated = true;					
+			   },
+			   
+               hibernate: function () {
+					if (this.cdTool.profileTransect){
+						this.cdTool.profileTransect.hide();
+					}
+					if (this.cdTool.profilePolygon){
+						this.cdTool.profilePolygon.hide();
+					}
+					if (this.cdTool.habitatLayer){
+						this.cdTool.habitatLayer.hide();
+					} 
+					this._deactivated = true;					
 			   },
 			   
                initialize: function (frameworkParameters) {
@@ -131,15 +131,14 @@ define([
 			   },
 				   
                getState: function () {
-				   
-				  // return state
-				   
+				  var state = this.cdTool.getState();
+				  console.log(state);
+				  return state; 
 	 		   	},
 				
                setState: function (state) { 
-				    
-					//this.cdTool.parameters = state;
-					
+               		console.log(state);
+					this._state = state;
 			   },
 			   
 			   identify: function(){

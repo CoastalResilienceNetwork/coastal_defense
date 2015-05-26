@@ -1,8 +1,8 @@
 {
 	"debug": false,
 	"gpServiceUrl": {
-		"findProfile": "http://services.coastalresilience.org:6080/arcgis/rest/services/CoastalDefense/CD_Find_Closest_Profile/GPServer/Find_Closest_Profile",
-		"runWaveModel": "http://services.coastalresilience.org:6080/arcgis/rest/services/CoastalDefense/CD_Wave_Model/GPServer/Run_Wave_Model"
+		"findProfile": "http://dev.services2.coastalresilience.org:6080/arcgis/rest/services/CoastalDefense/CD_Find_Closest_Profile/GPServer/Find_Closest_Profile",
+		"runWaveModel": "http://dev.services2.coastalresilience.org:6080/arcgis/rest/services/CoastalDefense/CD_Wave_Model/GPServer/Run_Wave_Model"
 	},
 	"waveHeightPeriod": [2,4],
 	"waveType": [

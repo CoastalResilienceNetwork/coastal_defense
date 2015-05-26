@@ -656,6 +656,11 @@ background-position: -1px center !important;
 height: 32px !important;
 }
 
+/*prevents popup from displaying on top of save and share window */
+.claro .dijitTooltipDialogPopup {
+	z-index: 899 !important;
+}
+
 #dijit__MasterTooltip_0 {
 width:175px !important;
 }

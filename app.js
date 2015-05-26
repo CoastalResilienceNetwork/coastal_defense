@@ -133,6 +133,7 @@ define([
 		var cdTool = function(plugin, configFile, interfaceConfigFile){
 			this._map = plugin.map;
 			this._app = plugin.app;
+			this._plugin = plugin;
 			this._container = plugin.container;
 			
 			var self = this;
@@ -208,6 +209,249 @@ define([
 					
 			}; //end showIntro
 			
+			this.getState = function(){
+				state = new Object();
+				//state.tab = this.tc.selectedChildWidget.id;
+				state.tab = "cd-tc-Inputs";
+				state.habitatPane = registry.byId('habitatPane').selectedChildWidget.id;	  				
+			    state.parameters = {};
+				state.data = {};
+				state.controls = {};
+				state.style = {};
+				
+				state.parameters = this.parameters;
+				state.data.currentHabitatData = (this.currentHabitatData ? this.currentHabitatData : {});
+				state.data.futureHabitatData = (this.futureHabitatData ? this.futureHabitatData : {});
+				state.data.futureHabitatData.coral = (this.profileChart.getSeries("Reef (future)")) ? this.profileChart.getSeries("Reef (future)").data : {};
+				state.data.futureHabitatData.mangrove = (this.profileChart.getSeries("Mangrove (future)")) ? this.profileChart.getSeries("Mangrove (future)").data : {};
+				state.data.futureHabitatData.underwaterStructure = (this.profileChart.getSeries("Underwater Structure")) ? this.profileChart.getSeries("Underwater Structure").data : {};
+				
+				//Geographic Parameters
+				state.controls.regionButton = {};
+				state.controls.regionButton.label = this.regionButton.get("label");
+				state.controls.chooseProfileButton = {};
+				state.controls.chooseProfileButton.disabled = this.chooseProfileButton.get("disabled");
+					
+				//Wave Parameters
+				state.controls.windWaveButton = {};
+				state.controls.windWaveButton.label = this.windWaveButton.get("label");
+				state.controls.windWaveButton.disabled = this.windWaveButton.get("disabled");
+				state.controls.waveHeightBox = {};
+				state.controls.waveHeightBox.value = this.waveHeightBox.get("value");
+				state.controls.wavePeriodBox = {};
+				state.controls.wavePeriodBox.value = this.wavePeriodBox.get("value");
+				state.controls.waveButton = {};
+				state.controls.waveButton.label = this.windButton.get("label");
+				state.controls.waveButton.disabled = this.windButton.get("disabled");
+				state.controls.windButton = {};
+				state.controls.windButton.label = this.windButton.get("label");
+				state.controls.windButton.disabled = this.windButton.get("disabled");
+				state.controls.hurricaneButton = {};
+				state.controls.hurricaneButton.label =this.hurricaneButton.get("label");
+				state.controls.hurricaneButton.disabled = this.hurricaneButton.get("disabled");
+				
+				//Water Parameters
+				state.controls.waterTypeButton = {};
+				state.controls.waterTypeButton.label = this.waterTypeButton.get("label");
+				state.controls.waterTypeButton.disabled = this.waterTypeButton.get("disabled");
+				state.controls.seaLevelRiseButton = {};
+				state.controls.seaLevelRiseButton.label = this.seaLevelRiseButton.get("label");
+				state.controls.seaLevelRiseButton.disabled = this.seaLevelRiseButton.get("disabled");
+				state.controls.tideLevelButton = {};
+				state.controls.tideLevelButton.label = this.tideLevelButton.get("label");
+				state.controls.tideLevelButton.disabled = this.tideLevelButton.get("disabled");
+				
+				//Habitat Parameters
+				state.habitatScenarioTitleDiv = this.habitatScenarioTitleDiv.innerHTML;
+				//Coral Reef
+				state.controls.habitatScenarioButton = {};
+				state.controls.habitatScenarioButton.disabled = this.habitatScenarioButton.get("disabled");
+				state.controls.coralReefCheckBox = {};
+				state.controls.coralReefCheckBox.checked = this.coralReefCheckBox.checked;
+				state.controls.coralReefCheckBox.disabled = this.coralReefCheckBox.get("disabled");
+				state.controls.reefSeaEdgeBox = {};
+				state.controls.reefSeaEdgeBox.value = this.reefSeaEdgeBox.get("value");
+				state.controls.reefSeaEdgeBox.disabled = this.reefSeaEdgeBox.get("disabled");
+				state.controls.reefShoreEdgeBox = {};
+				state.controls.reefShoreEdgeBox.value = this.reefShoreEdgeBox.get("value");
+				state.controls.reefShoreEdgeBox.disabled = this.reefShoreEdgeBox.get("disabled");
+				state.controls.coralReefCheckBox = {};
+				state.controls.coralReefCheckBox.checked = this.coralReefCheckBox.checked;
+				state.controls.coralReefCheckBox.disabled = this.coralReefCheckBox.get("disabled");
+				state.controls.frictionCoefficientLiveCoralBox = {};
+				state.controls.frictionCoefficientLiveCoralBox.value = this.frictionCoefficientLiveCoralBox.get("value");
+				state.controls.frictionCoefficientLiveCoralBox.disabled = this.frictionCoefficientLiveCoralBox.get("disabled");
+				state.controls.frictionCoefficientReefFrameworkBox = {};
+				state.controls.frictionCoefficientReefFrameworkBox.value = this.frictionCoefficientReefFrameworkBox.get("value");
+				state.controls.frictionCoefficientReefFrameworkBox.disabled = this.frictionCoefficientReefFrameworkBox.get("disabled");
+				state.controls.reefResponseTypeButton = {};
+				state.controls.reefResponseTypeButton.label = this.reefResponseTypeButton.get("label");
+				state.controls.reefResponseTypeButton.disabled = this.reefResponseTypeButton.get("disabled");
+				state.controls.reefResponseDegradationBox = {};
+				state.controls.reefResponseDegradationBox.value = this.reefResponseDegradationBox.get("value");
+				state.controls.reefResponseDegradationBox.disabled = this.reefResponseDegradationBox.get("disabled");
+				
+				//Mangrove Parameters
+				state.controls.mangroveCheckBox = {};
+				state.controls.mangroveCheckBox.checked = this.mangroveCheckBox.checked;
+				state.controls.mangroveCheckBox.disabled = this.mangroveCheckBox.get("disabled");
+				state.controls.mangroveSeaEdgeBox = {};
+				state.controls.mangroveSeaEdgeBox.value = this.mangroveSeaEdgeBox.get("value");
+				state.controls.mangroveSeaEdgeBox.disabled = this.mangroveSeaEdgeBox.get("disabled");
+				state.controls.mangroveShoreEdgeBox = {};
+				state.controls.mangroveShoreEdgeBox.value = this.mangroveShoreEdgeBox.get("value");
+				state.controls.mangroveShoreEdgeBox.disabled = this.mangroveShoreEdgeBox.get("disabled");
+				state.controls.mangroveDensityBox = {};
+				state.controls.mangroveDensityBox.value = this.mangroveDensityBox.get("value");
+				state.controls.mangroveDensityBox.disabled = this.mangroveDensityBox.get("disabled");
+				state.controls.mangroveDensityReductionBox = {};
+				state.controls.mangroveDensityReductionBox.value = this.mangroveDensityReductionBox.get("value");
+				state.controls.mangroveDensityReductionBox.disabled = this.mangroveDensityReductionBox.get("disabled");
+				state.controls.mangroveMudDensityBox = {};
+				state.controls.mangroveMudDensityBox.value = this.mangroveMudDensityBox.get("value");
+				state.controls.mangroveMudDensityBox.disabled = this.mangroveMudDensityBox.get("disabled");
+				state.controls.mangroveSurgeAttenuationBox = {};
+				state.controls.mangroveSurgeAttenuationBox.value = this.mangroveSurgeAttenuationBox.get("value");
+				state.controls.mangroveSurgeAttenuationBox.disabled = this.mangroveSurgeAttenuationBox.get("disabled");
+
+				//Underwater Structure Parameters
+				state.controls.underwaterStructureCheckBox = {};
+				state.controls.underwaterStructureCheckBox.checked = this.underwaterStructureCheckBox.checked;
+				state.controls.underwaterStructureCheckBox.disabled = this.underwaterStructureCheckBox.get("disabled");
+				state.controls.underwaterStructureTypeButton = {};
+				state.controls.underwaterStructureTypeButton.label = this.underwaterStructureTypeButton.get("label");
+				state.controls.underwaterStructureTypeButton.disabled = this.underwaterStructureTypeButton.get("disabled");
+				state.controls.underwaterStructureLocationBox = {};
+				state.controls.underwaterStructureLocationBox.value = this.underwaterStructureLocationBox.get("value");
+				state.controls.underwaterStructureLocationBox.disabled = this.underwaterStructureLocationBox.get("disabled");
+				state.controls.underwaterStructureHeightBox = {};
+				state.controls.underwaterStructureHeightBox.value = this.underwaterStructureHeightBox.get("value");
+				state.controls.underwaterStructureHeightBox.disabled = this.underwaterStructureHeightBox.get("disabled");
+				state.controls.underwaterStructureBaseWidthBox = {};
+				state.controls.underwaterStructureBaseWidthBox.value = this.underwaterStructureBaseWidthBox.get("value");
+				state.controls.underwaterStructureBaseWidthBox.disabled = this.underwaterStructureBaseWidthBox.get("disabled");
+				state.controls.underwaterStructureCrestWidthBox = {};
+				state.controls.underwaterStructureCrestWidthBox.value = this.underwaterStructureCrestWidthBox.get("value");
+				state.controls.underwaterStructureCrestWidthBox.disabled = this.underwaterStructureCrestWidthBox.get("disabled");
+				
+				//Habitat tooltips
+				state.controls.coralReefCheckBoxTooltip = {};
+				state.controls.coralReefCheckBoxTooltip.label = this.coralReefCheckBoxTooltip.get("label");
+				state.controls.mangroveCheckBoxTooltip = {};
+				state.controls.mangroveCheckBoxTooltip.label = this.mangroveCheckBoxTooltip.get("label");
+				state.controls.underwaterStructureCheckBoxTooltip = {};
+				state.controls.underwaterStructureCheckBoxTooltip.label = this.underwaterStructureCheckBoxTooltip.get("label");
+				
+				state.controls.runScenarioButton = {};
+				state.controls.runScenarioButton.disabled = this.runScenarioButton.get("disabled");
+				
+				//Styles for specific interface elements				
+				state.style.windContentDiv = {};
+				state.style.windContentDiv.display = domStyle.get("windContentDiv", "display")
+				state.style.waveContentDiv = {};
+				state.style.waveContentDiv.display = domStyle.get("waveContentDiv", "display");
+				state.style.hurricaneContentDiv = {};
+				state.style.hurricaneContentDiv.display = domStyle.get("hurricaneContentDiv", "display");
+				state.style.cd_dataLoadingDiv = {};
+				state.style.cd_dataLoadingDiv.display = domStyle.get("cd_dataLoadingDiv", "display");
+				state.style.cd_sliderInputText = {};
+				state.style.cd_sliderInputText.color = domStyle.get("cd_sliderInputText", "color");
+				state.style.cd_habitatSliderDiv = {};
+				state.style.cd_habitatSliderDiv.width = domStyle.get("cd_habitatSliderDiv", "width") + "px";
+				
+				var parentId = registry.byId("coralReefPanel").getParent().id;
+				state.style[parentId] = {};
+				state.style[parentId].display = domStyle.get(parentId, "display");
+				var parentId = registry.byId("mangrovePanel").getParent().id;
+				state.style[parentId] = {};
+				state.style[parentId].display = domStyle.get(parentId, "display");
+				var parentId = registry.byId("underwaterStructurePanel").getParent().id;
+				state.style[parentId] = {};
+				state.style[parentId].display = domStyle.get(parentId, "display");
+				
+				//Habitat Range Slider - seperate from controls since it needs to be handled differently on setState.
+				state.habitatRangeSlider = {};
+				state.habitatRangeSlider.value = this.habitatRangeSlider.get("value");;
+				state.habitatRangeSlider.sliderHandle = domStyle.get(this.habitatRangeSlider.sliderHandle, "display");
+				state.habitatRangeSlider.sliderHandleMax = domStyle.get(this.habitatRangeSlider.sliderHandleMax, "display");
+				state.habitatRangeSlider.habitatSliderText = dojo.byId('habitatSliderText').innerHTML;
+
+				return state;
+			};
+			
+			this.setState = function(state) {
+				this.currentHabitatData = state.data.currentHabitatData;
+				this.futureHabitatData = state.data.futureHabitatData;
+				this.parameters = state.parameters;
+				
+				this.loadLayers();
+				this.loadProfileData();
+				
+				this.tc.selectChild(state.tab);
+				registry.byId('habitatPane').selectChild(state.habitatPane);
+				
+				this.habitatScenarioTitleDiv.innerHTML = state.habitatScenarioTitleDiv;
+
+				for (var control in state.controls) {
+					 for (property in state.controls[control]) {
+						this[control].set(property, state.controls[control][property]);
+					 }
+				 }
+
+				 for (var div in state.style) {
+					 for (property in state.style[div]) {
+						domStyle.set(div, property, state.style[div][property]);
+					 }
+				 }
+
+				 if (!_.isEmpty(state.data.futureHabitatData.coral)) { this.addFutureHabitatPlot("coral"); } else { this.futureHabitatData.coral = this.currentHabitatData.coral; };
+				 if (!_.isEmpty(state.data.futureHabitatData.mangrove)) { this.addFutureHabitatPlot("mangrove"); } else { this.futureHabitatData.mangrove = this.currentHabitatData.mangrove; };
+				 if (!_.isEmpty(state.data.futureHabitatData.underwaterStructure)) { this.addFutureHabitatPlot("underwaterStructure"); } else { this.futureHabitatData.underwaterStructure = this.currentHabitatData.underwaterStructure; };
+				 
+				 domStyle.set(this.habitatRangeSlider.sliderHandle, "display", state.habitatRangeSlider.sliderHandle);
+				 domStyle.set(this.habitatRangeSlider.sliderHandleMax, "display", state.habitatRangeSlider.sliderHandleMax);
+				 dojo.byId('habitatSliderText').innerHTML = state.habitatRangeSlider.habitatSliderText;
+				 
+				 window.setTimeout(function() { self.habitatRangeSlider.set('value', state.habitatRangeSlider.value); }, 1000);
+				 this.loadTransectLayer();
+				 
+				 registry.byId('habitatPane').resize({h:370});
+				 popup.close(self.chooseRegionButtonTooltip);
+				 popup.close(self.chooseProfileButtonTooltip);
+				 popup.close(self.chooseHabitatButtonTooltip);
+				 
+				 this._plugin._state = {};
+			}
+			
+			this.showTool = function(){
+				if (!this.profileChart) {
+					this.addInterfaceTooltips();
+
+					var blankData = []
+					var range = 2000 
+					for (var i = 0; i <= range; i++) {
+						blankData.push ({ "x": i-(range/2), "y": -100 });
+					}
+					this.createProfileChart(blankData, this);
+					this.createProfileChartSlider(blankData,this);
+					this.createResultsChart(blankData, this);
+					this.parameters.windowOpen = true;
+					
+					//hack to force panel to select coral reef by selecting another child then coral reef again
+					dijit.byId('habitatPane').selectChild('mangrovePanel');
+					dijit.byId('habitatPane').selectChild('coralReefPanel');
+					dijit.byId('habitatPane').resize({h:370});
+				}
+				
+				if (this._map.getLayer("cd_profileTransect") != undefined) {
+					this.profileTransect.show();
+				}
+				if (this._map.getLayer("cd_habitatLayer") != undefined) {
+					this.habitatLayer.show();
+				}	
+
+			} //end this.showTool
+
 			this.loadInterface = function() {
 				var self = this;
 				domStyle.set(this._container, "overflow", "hidden");				
@@ -258,7 +502,9 @@ define([
 					 style: "position:relative;width:823px;height:553px;overflow:hidden;",
 			         isLayoutContainer: true,
 					 onShow: function() {
-						self.resizeProfileChart();
+						if (!this.profileChart) {
+							self.resizeProfileChart();
+						}
 						if( dijit.byId('chooseProfileButton').get('disabled') ){
 							popup.open({
 								popup: self.chooseRegionButtonTooltip,
@@ -378,30 +624,6 @@ define([
 				
 				dojo.query("#cd-tc .dijitTabContainerTop-tabs").style("width", "100%");
 			}
-
-			this.showTool = function(){
-				if (!this.profileChart) {
-					this.addInterfaceTooltips();
-
-					var blankData = []
-					var range = 2000 
-					for (var i = 0; i <= range; i++) {
-						blankData.push ({ "x": i-(range/2), "y": -100 });
-					}
-					this.createProfileChart(blankData, this);
-					this.createProfileChartSlider(blankData,this);
-					
-					this.createResultsChart(blankData, this);
-					
-					this.parameters.windowOpen = true;
-					
-					//hack to force panel to select coral reef by selecting another child then coral reef again
-					dijit.byId('habitatPane').selectChild('mangrovePanel');
-					dijit.byId('habitatPane').selectChild('coralReefPanel');
-					dijit.byId('habitatPane').resize({h:370})
-				}
-
-			} //end this.showTool
 
 			this.createRegionUnitsPanel = function () {
 
@@ -2031,7 +2253,6 @@ define([
 			
 			this.resizeProfileChart = function(){
 				var width = this.profileChart.dim.width;
-				console.log(width);
 				if (width != 525) {
 					this.profileChart.resize(525,250);
 					var innerPlotArea =  dojo.query('#cd_plotDiv svg rect')[1];
@@ -2371,7 +2592,7 @@ define([
 				var maxY = this.profileChart.getAxis("y").opt.max
 				switch (type) {
 					case "coral":
-						var data = this.currentHabitatData.coral;
+						var data = this.futureHabitatData.coral;
 						//data = [ {x:_.first(data).x, y:0 }, {x:_.last(data).x, y:0 } ];
 						data = dojo.map(data, function(item){ var obj = { x: item.x }; obj.y = (item.y != null) ? 0 : item.y; return obj })
 						var plotName = "Reef (future)";
@@ -2382,7 +2603,7 @@ define([
 						break;
 					
 					case "mangrove": 
-						var data = this.currentHabitatData.mangrove;
+						var data = this.futureHabitatData.mangrove;
 						data = [ {x:_.first(data).x, y:maxY }, {x:_.last(data).x, y:maxY } ];
 						var plotName = "Mangrove (future)";
 						var plot = "futureMangrove"; 
@@ -2599,8 +2820,8 @@ define([
 				
 				this.chooseProfileButtonTooltip = new TooltipDialog({
 					id: 'chooseProfileButtonTooltip',
-					style: "width: 135px;",
-					content: "2. Click to set a profile<br>&nbsp;&nbsp;&nbsp;&nbsp;for analysis."
+					style: "width: 145px;",
+					content: "2. Click to set a profile<br>&nbsp;&nbsp;&nbsp;&nbsp; for analysis."
 				});
 				this.chooseProfileButtonTooltip.startup();
 
@@ -2654,7 +2875,7 @@ define([
 			this.loadLayers = function(){
 				
 				this.habitatLayer = new ArcGISDynamicMapServiceLayer(this._data[this.parameters.regionIndex].layers.mapLayers.url, { 
-				  "id": "habitatLayer",
+				  "id": "cd_habitatLayer",
 				  "opacity": 0.5
 				});
 				var visibleLayers = lang.clone(this._data[this.parameters.regionIndex].layers.mapLayers.habitatLayerIds);
@@ -3259,7 +3480,6 @@ define([
 					
 					var mangroveMinValues = dojo.filter(profileData,function(item) { return item.y > (self.parameters.mllw*2 - 0.25) && item.y < (self.parameters.mllw*2 + 0.25) });
 					var mangroveValues = dojo.map(mangroveMinValues, function(value){ return value.x});
-					console.log(mangroveValues);
 					/* var mangroveMinValue = dojo.filter(mangroveMinValues, function(item) {
 						return item.x == _.max(mangroveValues);
 					});
@@ -3788,7 +4008,6 @@ define([
 
 				var closestDistanceValue = this.utilities.findClosestValueInArray(_.first(distance), this.currentHabitatData.distance).value
 				var start = dojo.indexOf(distance, closestDistanceValue);
-				//console.log('index = ' + start);
 				this.waveModelResults.distance = distance.slice(start, distance.length+1);
 				this.waveModelResults.elevation = elevation.slice(start, elevation.length+1);
 				
