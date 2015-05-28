@@ -135,6 +135,7 @@ define([
 			this._app = plugin.app;
 			this._plugin = plugin;
 			this._container = plugin.container;
+			this._state = {};
 			
 			var self = this;
 			this.parameters = {};
@@ -210,7 +211,7 @@ define([
 			}; //end showIntro
 			
 			this.getState = function(){
-				state = new Object();
+				var state = new Object();
 				//state.tab = this.tc.selectedChildWidget.id;
 				state.tab = "cd-tc-Inputs";
 				state.habitatPane = registry.byId('habitatPane').selectedChildWidget.id;	  				
@@ -220,11 +221,10 @@ define([
 				state.style = {};
 				
 				state.parameters = this.parameters;
-				state.data.currentHabitatData = (this.currentHabitatData ? this.currentHabitatData : {});
-				state.data.futureHabitatData = (this.futureHabitatData ? this.futureHabitatData : {});
-				state.data.futureHabitatData.coral = (this.profileChart.getSeries("Reef (future)")) ? this.profileChart.getSeries("Reef (future)").data : {};
-				state.data.futureHabitatData.mangrove = (this.profileChart.getSeries("Mangrove (future)")) ? this.profileChart.getSeries("Mangrove (future)").data : {};
-				state.data.futureHabitatData.underwaterStructure = (this.profileChart.getSeries("Underwater Structure")) ? this.profileChart.getSeries("Underwater Structure").data : {};
+				state.data.futureHabitatData = {};
+				state.data.futureHabitatData.coral = (this.profileChart.getSeries("Reef (future)")) ? true : false;
+				state.data.futureHabitatData.mangrove = (this.profileChart.getSeries("Mangrove (future)")) ? true : false;
+				state.data.futureHabitatData.underwaterStructure = (this.profileChart.getSeries("Underwater Structure")) ? true : false;
 				
 				//Geographic Parameters
 				state.controls.regionButton = {};
@@ -380,47 +380,142 @@ define([
 			};
 			
 			this.setState = function(state) {
-				this.currentHabitatData = state.data.currentHabitatData;
-				this.futureHabitatData = state.data.futureHabitatData;
-				this.parameters = state.parameters;
-				
-				this.loadLayers();
-				this.loadProfileData();
-				
 				this.tc.selectChild(state.tab);
-				registry.byId('habitatPane').selectChild(state.habitatPane);
 				
-				this.habitatScenarioTitleDiv.innerHTML = state.habitatScenarioTitleDiv;
+				if(_.has(state.parameters, "findClosestProfileParams")) {
+					popup.close(self.chooseRegionButtonTooltip);
+					popup.close(self.chooseProfileButtonTooltip);
+					popup.close(self.chooseHabitatButtonTooltip);
 
-				for (var control in state.controls) {
-					 for (property in state.controls[control]) {
-						this[control].set(property, state.controls[control][property]);
-					 }
-				 }
+					dojo.byId("cd_noDataHtmlContentDiv").innerHTML = "<center><img src='" + self.pluginDirectory + "/images/graph.png' class='errorImage'>Habitat Profile Graph</center>";
+					domStyle.set("cd_noDataHtmlContentDiv", "display", "none");
+					domStyle.set("cd_dataLoadingContentDiv", "display","block");
+					domStyle.set("cd_dataLoadingDiv", "display","block");
 
-				 for (var div in state.style) {
-					 for (property in state.style[div]) {
-						domStyle.set(div, property, state.style[div][property]);
-					 }
-				 }
+					
+					gp_FindClosestProfile = new esri.tasks.Geoprocessor(self.gpFindProfileUrl);
+					gp_FindClosestProfile.submitJob(state.parameters.findClosestProfileParams, function(jobInfo) {
+						if (jobInfo.jobStatus == 'esriJobSucceeded') {	
+							gp_FindClosestProfile.getResultData(jobInfo.jobId, "Output_Profile", function(result) {
+								self.findProfileProgressBar.set({ "value": self.findProfileProgressBar.get("maximum") });
+								self.processProfileData(result.value);
+								self.parameters = state.parameters;
 
-				 if (!_.isEmpty(state.data.futureHabitatData.coral)) { this.addFutureHabitatPlot("coral"); } else { this.futureHabitatData.coral = this.currentHabitatData.coral; };
-				 if (!_.isEmpty(state.data.futureHabitatData.mangrove)) { this.addFutureHabitatPlot("mangrove"); } else { this.futureHabitatData.mangrove = this.currentHabitatData.mangrove; };
-				 if (!_.isEmpty(state.data.futureHabitatData.underwaterStructure)) { this.addFutureHabitatPlot("underwaterStructure"); } else { this.futureHabitatData.underwaterStructure = this.currentHabitatData.underwaterStructure; };
-				 
-				 domStyle.set(this.habitatRangeSlider.sliderHandle, "display", state.habitatRangeSlider.sliderHandle);
-				 domStyle.set(this.habitatRangeSlider.sliderHandleMax, "display", state.habitatRangeSlider.sliderHandleMax);
-				 dojo.byId('habitatSliderText').innerHTML = state.habitatRangeSlider.habitatSliderText;
-				 
-				 window.setTimeout(function() { self.habitatRangeSlider.set('value', state.habitatRangeSlider.value); }, 1000);
-				 this.loadTransectLayer();
-				 
-				 registry.byId('habitatPane').resize({h:370});
-				 popup.close(self.chooseRegionButtonTooltip);
-				 popup.close(self.chooseProfileButtonTooltip);
-				 popup.close(self.chooseHabitatButtonTooltip);
-				 
-				 this._plugin._state = {};
+								self.loadProfileData();
+								self.loadLayers();
+								self.loadTransectLayer();
+								dojo.style("cd_dataLoadingDiv", "display", "none");
+								self.findProfileProgressBar.set({ "value": 0 });
+								
+								registry.byId('habitatPane').selectChild(state.habitatPane);
+								
+								self.habitatScenarioTitleDiv.innerHTML = state.habitatScenarioTitleDiv;
+
+								//recreate futureHabitatData
+								// recreate future coral
+								if (state.data.futureHabitatData.coral) {
+									var data = dojo.map(self.futureHabitatData.coral, function(item){ 
+										var obj = { x: item.x };
+										obj.y = (item.y != null && item.x > state.parameters.futureReefSeaEdge && item.x < state.parameters.futureReefShoreEdge) ? 0 : null;
+										return obj;
+									});
+									self.futureHabitatData.coral = data;
+									self.addFutureHabitatPlot("coral");
+								}
+
+								// recreate future mangrove
+								if (state.data.futureHabitatData.mangrove) {
+									if(self.futureHabitatData.mangrove.length > 0){
+										self.futureHabitatData.mangrove[0].x = state.parameters.futureMangroveSeaEdge;
+										self.futureHabitatData.mangrove[1].x = state.parameters.futureMangroveShoreEdge;
+										self.addFutureHabitatPlot("mangrove");
+									}
+								}
+
+								// recreate future underwaterStructure
+								if (state.data.futureHabitatData.underwaterStructure) {
+									var xs = dojo.map(self.currentHabitatData.elevation, function (item) { return Math.abs(item.x - state.parameters.futureUnderwaterStructureSeaEdge) });
+									var index = dojo.indexOf(xs, _.min(xs));
+									var offset = 5;
+									self.futureHabitatData.underwaterStructure[0].x = self.currentHabitatData.elevation[index-offset].x;
+									self.futureHabitatData.underwaterStructure[0].y = self.currentHabitatData.elevation[index-offset].y - 0.5;
+									self.futureHabitatData.underwaterStructure[1].x = state.parameters.futureUnderwaterStructureSeaEdge;
+									self.futureHabitatData.underwaterStructure[2].x = self.currentHabitatData.elevation[index+offset].x;
+									self.futureHabitatData.underwaterStructure[2].y = self.currentHabitatData.elevation[index+offset].y - 0.5;
+									self.addFutureHabitatPlot("underwaterStructure");
+								}
+
+								for (var control in state.controls) {
+									 for (property in state.controls[control]) {
+										self[control].set(property, state.controls[control][property]);
+									 }
+								 }
+
+								 for (var div in state.style) {
+									 for (property in state.style[div]) {
+										domStyle.set(div, property, state.style[div][property]);
+									 }
+								 }
+
+								 domStyle.set(self.habitatRangeSlider.sliderHandle, "display", state.habitatRangeSlider.sliderHandle);
+								 domStyle.set(self.habitatRangeSlider.sliderHandleMax, "display", state.habitatRangeSlider.sliderHandleMax);
+								 dojo.byId('habitatSliderText').innerHTML = state.habitatRangeSlider.habitatSliderText;
+								 
+								 window.setTimeout(function() { 
+									self.habitatRangeSlider.set('value', state.habitatRangeSlider.value);
+								}, 1000);
+								 
+								 registry.byId('habitatPane').resize({h:370});
+
+								 if(state.habitatScenarioTitleDiv == ""){
+								 	popup.open({
+										popup: self.chooseHabitatButtonTooltip,
+										around: dojo.byId('habitatScenarioButton'),
+										orient: ["after"]
+									});
+									self.adjustInterfaceTooltip("chooseHabitatButtonTooltip", 15, 10, 15);
+								 } else {
+								 	self.runScenarioButtonTooltip.open(dojo.byId("runScenarioButton"));
+								 }
+								 
+								 self._state = {};
+								
+							});
+						} else if (jobInfo.jobStatus == 'esriJobFailed') {
+							self.findProfileProgressBar.set({ "value": self.findProfileProgressBar.get("maximum") });
+							if (self.parameters.debug) {
+								self.showDebugMessages(jobInfo);
+							}
+							self.disableInterfaceInputs();
+							dojo.byId("cd_noDataHtmlContentDiv").innerHTML = "<center><img src='" + self.pluginDirectory + "/images/error.png' class='errorImage'>No data to plot</center>";
+							dojo.style("cd_noDataHtmlContentDiv", "display", "block");
+							dojo.style("cd_dataLoadingContentDiv", "display","none");
+							dojo.style("cd_dataLoadingDiv", "display", "block");
+							self.findProfileProgressBar.set({ "value": 0 });
+							self.runScenarioButton.set("disabled", false);
+						}
+					}, 
+					function(jobInfo) {
+						if (self.parameters.debug) {
+							self.showDebugMessages(jobInfo);
+						}
+						self.advanceProgressBar("findProfile");
+					});
+				} else {
+					if (state.controls.regionButton.label != "Region"){
+						self.regionButton.set("label", state.controls.regionButton.label);
+						popup.close(self.chooseRegionButtonTooltip);
+						self.loadLayers();
+						self.chooseProfileButton.set("disabled", false);
+						popup.open({
+							popup: this.chooseProfileButtonTooltip,
+							around: dojo.byId('chooseProfileButton'),
+							orient: ["after"]
+						});
+						this.adjustInterfaceTooltip("chooseProfileButtonTooltip", 15, 10, 15);
+					}
+				}
+				
 			}
 			
 			this.showTool = function(){
@@ -2262,108 +2357,110 @@ define([
 			}
 			
 			this.onHabitatCheckboxChange = function(type, widget){
-				switch (type) {
-					case 'coral':
-						if (widget.checked) {
-							self.reefShoreEdgeBox.set('disabled', false); 
-							self.reefSeaEdgeBox.set('disabled', false);
-							
-							self.frictionCoefficientLiveCoralBox.set('disabled', false); 
-							self.frictionCoefficientReefFrameworkBox.set('disabled', false);
-							
-							if (self.waterTypeButton.label == "Sea-Level Rise") {
-								self.reefResponseTypeButton.set('disabled', false);
+				if(_.isEmpty(this._state)) {
+					switch (type) {
+						case 'coral':
+							if (widget.checked) {
+								self.reefShoreEdgeBox.set('disabled', false); 
+								self.reefSeaEdgeBox.set('disabled', false);
+								
+								self.frictionCoefficientLiveCoralBox.set('disabled', false); 
+								self.frictionCoefficientReefFrameworkBox.set('disabled', false);
+								
+								if (self.waterTypeButton.label == "Sea-Level Rise") {
+									self.reefResponseTypeButton.set('disabled', false);
+								}
+								if (self.reefResponseTypeButton.label == "Degrade") {
+									self.reefResponseDegradationBox.set('disabled', false);
+								}
+								
+								self.addFutureHabitatPlot("coral");					
+								domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "block");
+								domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "block");
+								self.habitatRangeSlider.set('value', [self.parameters.futureReefSeaEdge, self.parameters.futureReefShoreEdge]);
+								self.setProfileSliderText(type, true);
+								
+							} else {
+								self.reefShoreEdgeBox.set('disabled', true); 
+								self.reefSeaEdgeBox.set('disabled', true);
+								
+								self.frictionCoefficientLiveCoralBox.set('disabled', true); 
+								self.frictionCoefficientReefFrameworkBox.set('disabled', true); 
+
+								self.reefResponseTypeButton.set('disabled', true);
+								self.reefResponseDegradationBox.set('disabled', true);
+								
+								self.removeFutureHabitatPlot("coral");
+								
+								domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "none");
+								domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "none");
+								self.setProfileSliderText(type, false);
 							}
-							if (self.reefResponseTypeButton.label == "Degrade") {
-								self.reefResponseDegradationBox.set('disabled', false);
+							break;
+						case 'mangrove':
+							if (widget.checked) {
+								self.mangroveShoreEdgeBox.set('disabled', false); 
+								self.mangroveSeaEdgeBox.set('disabled', false);
+								
+								self.mangroveDensityBox.set('disabled', false); 
+								self.mangroveDensityReductionBox.set('disabled', false);
+								self.mangroveMudDensityBox.set('disabled', false); 
+								self.mangroveSurgeAttenuationBox.set('disabled', false); 
+								
+								self.addFutureHabitatPlot("mangrove");
+								domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "block");
+								domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "block");
+								self.habitatRangeSlider.set('value', [self.parameters.futureMangroveSeaEdge, self.parameters.futureMangroveShoreEdge]);
+								self.setProfileSliderText(type, true);
+								
+							} else {
+								self.mangroveShoreEdgeBox.set('disabled', true); 
+								self.mangroveSeaEdgeBox.set('disabled', true);
+								
+								self.mangroveDensityBox.set('disabled', true); 
+								self.mangroveDensityReductionBox.set('disabled', true);
+								self.mangroveMudDensityBox.set('disabled', true); 
+								self.mangroveSurgeAttenuationBox.set('disabled', true); 							
+								
+								self.removeFutureHabitatPlot("mangrove");
+								
+								domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "none");
+								domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "none");
+								self.setProfileSliderText(type, false);
 							}
-							
-							self.addFutureHabitatPlot("coral");					
-							domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "block");
-							domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "block");
-							self.habitatRangeSlider.set('value', [self.parameters.futureReefSeaEdge, self.parameters.futureReefShoreEdge]);
-							self.setProfileSliderText(type, true);
-							
-						} else {
-							self.reefShoreEdgeBox.set('disabled', true); 
-							self.reefSeaEdgeBox.set('disabled', true);
-							
-							self.frictionCoefficientLiveCoralBox.set('disabled', true); 
-							self.frictionCoefficientReefFrameworkBox.set('disabled', true); 
+							break;
+						case 'underwaterStructure':
+							if (widget.checked) {
+								self.underwaterStructureLocationBox.set('disabled', false); 
+								self.underwaterStructureHeightBox.set('disabled', false); 
+								self.underwaterStructureBaseWidthBox.set('disabled', false);
+								self.underwaterStructureTypeButton.set('disabled', false);
+								
+								if (self.underwaterStructureTypeButton.label == 'Trapezoidal') {
+									self.underwaterStructureCrestWidthBox.set('disabled', false);
+								}
 
-							self.reefResponseTypeButton.set('disabled', true);
-							self.reefResponseDegradationBox.set('disabled', true);
-							
-							self.removeFutureHabitatPlot("coral");
-							
-							domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "none");
-							domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "none");
-							self.setProfileSliderText(type, false);
-						}
-						break;
-					case 'mangrove':
-						if (widget.checked) {
-							self.mangroveShoreEdgeBox.set('disabled', false); 
-							self.mangroveSeaEdgeBox.set('disabled', false);
-							
-							self.mangroveDensityBox.set('disabled', false); 
-							self.mangroveDensityReductionBox.set('disabled', false);
-							self.mangroveMudDensityBox.set('disabled', false); 
-							self.mangroveSurgeAttenuationBox.set('disabled', false); 
-							
-							self.addFutureHabitatPlot("mangrove");
-							domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "block");
-							domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "block");
-							self.habitatRangeSlider.set('value', [self.parameters.futureMangroveSeaEdge, self.parameters.futureMangroveShoreEdge]);
-							self.setProfileSliderText(type, true);
-							
-						} else {
-							self.mangroveShoreEdgeBox.set('disabled', true); 
-							self.mangroveSeaEdgeBox.set('disabled', true);
-							
-							self.mangroveDensityBox.set('disabled', true); 
-							self.mangroveDensityReductionBox.set('disabled', true);
-							self.mangroveMudDensityBox.set('disabled', true); 
-							self.mangroveSurgeAttenuationBox.set('disabled', true); 							
-							
-							self.removeFutureHabitatPlot("mangrove");
-							
-							domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "none");
-							domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "none");
-							self.setProfileSliderText(type, false);
-						}
-						break;
-					case 'underwaterStructure':
-						if (widget.checked) {
-							self.underwaterStructureLocationBox.set('disabled', false); 
-							self.underwaterStructureHeightBox.set('disabled', false); 
-							self.underwaterStructureBaseWidthBox.set('disabled', false);
-							self.underwaterStructureTypeButton.set('disabled', false);
-							
-							if (self.underwaterStructureTypeButton.label == 'Trapezoidal') {
-								self.underwaterStructureCrestWidthBox.set('disabled', false);
+								domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "block");
+								domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "none");
+								
+								self.addFutureHabitatPlot("underwaterStructure");
+
+								self.habitatRangeSlider.set('value', [self.parameters.futureUnderwaterStructureSeaEdge, self.parameters.futureUnderwaterStructureShoreEdge]);
+								self.setProfileSliderText(type, true);
+								
+							} else {
+								self.underwaterStructureLocationBox.set('disabled', true); 
+								self.underwaterStructureHeightBox.set('disabled', true); 
+								self.underwaterStructureBaseWidthBox.set('disabled', true);
+								self.underwaterStructureTypeButton.set('disabled', true);
+
+								domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "none");
+								domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "none");
+								self.removeFutureHabitatPlot("underwaterStructure");
+								self.setProfileSliderText(type, false);
 							}
-
-							domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "block");
-							domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "none");
-							
-							self.addFutureHabitatPlot("underwaterStructure");
-
-							self.habitatRangeSlider.set('value', [self.parameters.futureUnderwaterStructureSeaEdge, self.parameters.futureUnderwaterStructureShoreEdge]);
-							self.setProfileSliderText(type, true);
-							
-						} else {
-							self.underwaterStructureLocationBox.set('disabled', true); 
-							self.underwaterStructureHeightBox.set('disabled', true); 
-							self.underwaterStructureBaseWidthBox.set('disabled', true);
-							self.underwaterStructureTypeButton.set('disabled', true);
-
-							domStyle.set(self.habitatRangeSlider.sliderHandle,"display", "none");
-							domStyle.set(self.habitatRangeSlider.sliderHandleMax,"display", "none");
-							self.removeFutureHabitatPlot("underwaterStructure");
-							self.setProfileSliderText(type, false);
-						}
-						break;
+							break;
+					}
 				}
 			}
 			
@@ -2589,7 +2686,7 @@ define([
 			}
 			
 			this.addFutureHabitatPlot = function(type) {
-				var maxY = this.profileChart.getAxis("y").opt.max
+				var maxY = this.profileChart.getAxis("y").opt.max;
 				switch (type) {
 					case "coral":
 						var data = this.futureHabitatData.coral;
@@ -2943,6 +3040,7 @@ define([
 							"Input_Location": evt.mapPoint.x + "," + evt.mapPoint.y,
 							"Filter_Number": self._data[self.parameters.regionIndex].profilePointFilterNumber
 						}
+						self.parameters.findClosestProfileParams = params;
 						gp_FindClosestProfile = new esri.tasks.Geoprocessor(self.gpFindProfileUrl);
 						gp_FindClosestProfile.submitJob(params, function(jobInfo) {
 							if (jobInfo.jobStatus == 'esriJobSucceeded') {	
@@ -3584,15 +3682,30 @@ define([
 					this.removeFutureHabitatPlot("underwaterStructure");
 				}
 
+				var dropdownId = this.habitatScenarioButton.dropDown.domNode.id;
+				var dropdown = registry.byId(dropdownId);
+				var dropdownMenu = dropdown.getChildren();
+
 				if (this.currentHabitatData.coral.length > 0) {
 					this.profileChart.addSeries("Coral Reef & Hard Bottom", this.currentHabitatData.coral, { 
 						plot: "currentReef", 
 						stroke: { color: "#1C4A85", width: 5, cap: "round", join: "round" } 
 					});
+
+					array.forEach(dropdownMenu, function(item){
+						if(item.label.indexOf("Coral") > -1){
+							item.set("disabled", false);
+						}
+					});
 				} else {
 					this.profileChart.addSeries("Coral Reef & Hard Bottom", [{"x": -1000, "y": -1000},{"x": -1001, "y": -1001}], { 
 						plot: "currentReef", 
 						stroke: { color: "#1C4A85", width: 5, cap: "round", join: "round" } 
+					});
+					array.forEach(dropdownMenu, function(item){
+						if(item.label.indexOf("Coral") > -1){
+							item.set("disabled", true);
+						}
 					});
 				}
 				if (this.currentHabitatData.mangrove.length > 0) {
@@ -3600,10 +3713,22 @@ define([
 						plot: "currentMangrove", 
 						stroke: { color: "#4B604E", width: 5, cap: "round", join: "round" } 
 					});
+					
+					array.forEach(dropdownMenu, function(item){
+						if(item.label.indexOf("Mangrove") > -1){
+							item.set("disabled", false);
+						}
+					});
 				} else {
 					this.profileChart.addSeries("Mangrove", [{"x": -1000, "y": -1000},{"x": -1001, "y": -1001}], { 
 						plot: "currentMangrove", 
 						stroke: { color: "#4B604E", width: 5, cap: "round", join: "round" } 
+					});
+
+					array.forEach(dropdownMenu, function(item){
+						if(item.label.indexOf("Mangrove") > -1){
+							item.set("disabled", true);
+						}
 					});
 				}
 				

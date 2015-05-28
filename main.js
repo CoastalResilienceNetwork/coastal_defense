@@ -75,7 +75,6 @@ define([
                activate: function () {
 					self = this;
 					var showInfoGraphic = localStorage.getItem(this.toolbarName + " showinfographic");
-					console.log(showInfoGraphic);
 					console.log(this._state);
 					if (( showInfoGraphic === "true" || showInfoGraphic == null) && _.isEmpty(this._state) && !this._deactivated) {
 					   var pluginId = this.container.parentNode.parentNode.id;
@@ -86,7 +85,9 @@ define([
 					} else {
 						this.cdTool.showTool(this.cdTool);
 						if (!_.isEmpty(this._state)) {
-							this.cdTool.setState(this._state);
+							this.cdTool._state = lang.clone(this._state);
+							this._state = {};
+							this.cdTool.setState(this.cdTool._state);
 						}
 						this._deactivated = false;
 					}
@@ -137,7 +138,6 @@ define([
 	 		   	},
 				
                setState: function (state) { 
-               		console.log(state);
 					this._state = state;
 			   },
 			   
