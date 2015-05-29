@@ -676,7 +676,7 @@ define([
 				var habitatTitlePaneDiv = new ContentPane({
 					id: 'habitatTitlePaneDiv',
 					style: "position:relative",
-					"class": 'claro dijitTitlePaneTitle'
+					"class": 'dijitTitlePaneTitle dijitTitlePaneTitleFixedOpen dijitFixedOpen'
 			    });
 				cpBottom.addChild(habitatTitlePaneDiv)
 
