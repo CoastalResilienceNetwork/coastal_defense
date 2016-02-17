@@ -95,15 +95,6 @@ define([
 			   },
 			   
                deactivate: function () { 
-					if (this.cdTool.profileTransect){
-						this.cdTool.profileTransect.hide();
-					}
-					if (this.cdTool.profilePolygon){
-						this.cdTool.profilePolygon.hide();
-					}
-					if (this.cdTool.habitatLayer){
-						this.cdTool.habitatLayer.hide();
-					}
 					this._deactivated = true;					
 			   },
 			   
