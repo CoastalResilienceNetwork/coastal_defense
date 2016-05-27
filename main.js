@@ -15,7 +15,7 @@ require({
 	    },
 		{
 	        name: "underscore",
-	        location: "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4",
+	        location: "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3",
 	        main: "underscore-min"
 	    },
         {
@@ -40,7 +40,7 @@ define([
 		"dojo/dom-style",
 		"dojo/_base/lang",
 		"dojo/query",
-		"use!underscore", 
+		"underscore", 
 		"./app",
 		"dojo/text!plugins/coastal_defense/cd_region.json",
 		"dojo/text!plugins/coastal_defense/cd_interface.json"
