@@ -18,24 +18,11 @@ require({
 	        location: "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4",
 	        main: "underscore-min"
 	    },
-			//         {
-			//             name: "extjs",
-			// location: location.pathname.replace(/\/[^/]+$/, "") + "plugins/coastal_defense/lib/ext-4.2.1-gpl",
-			//             main: "ext-all"
-			//         },
-        {
-            name: "tv4",
-            location: location.pathname.replace(/\/[^/]+$/, "") + "plugins/coastal_defense/lib",
-            main: "tv4.min"
-        },
         {
             name: "jquery_ui",
             location: "//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1",
             main: "jquery-ui.min"
         }
-		
-		
-
     ]
 });
 
