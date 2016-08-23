@@ -3,8 +3,7 @@
 define([
 	    "dojo/_base/declare",
 		"use!underscore", 	
-	    "dojo/json", 
-		"use!tv4", 
+	    "dojo/json",
 		"dojo/store/Memory",
 		"dojo/store/Observable",
 		"dijit/form/ComboBox", 
@@ -68,8 +67,7 @@ define([
 	function (declare,
 			_, 
 			//Ext,
-			JSON, 
-			tv4, 
+			JSON,
 			Memory, 
 			Observable,
 			ComboBox, 
@@ -4471,14 +4469,8 @@ define([
 				// Parse and validate config data to get URLs of layer sources
 				var errorMessage;
 				try {
-				    var data = JSON.parse(configFile),
-				        schema = layerConfigSchema,
-				        valid = tv4.validate(data, schema);
-				    if (valid) {
-				        return data;
-				    } else {
-				        errorMessage = tv4.error.message + " (data path: " + tv4.error.dataPath + ")";
-				    }
+				    var data = JSON.parse(configFile);
+				    return data;
 				} catch (e) {
 				    errorMessage = e.message;
 				}

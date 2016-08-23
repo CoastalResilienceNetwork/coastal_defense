@@ -26,10 +26,6 @@ require({
     ]
 });
 
-
-
-
-
 define([
         "dojo/_base/declare",
         "framework/PluginBase",

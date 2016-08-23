@@ -3,7 +3,6 @@
 		"plugins/coastal_defense/main.css"
     ],
     "use": {
-		"underscore": { "attach": "_" },
-		"tv4": { "attach": "tv4" }
+		"underscore": { "attach": "_" }
     }
 }
