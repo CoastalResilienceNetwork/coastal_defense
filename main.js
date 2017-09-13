@@ -45,13 +45,14 @@ define([
            return declare(PluginBase, {
                toolbarName: "Coastal Defense",
                toolbarType: "sidebar",
+			   hasHelp: false,
 			   resizable: false,
 			   showServiceLayersInLegend: true,
                allowIdentifyWhenActive: false,
 			   infoGraphic: "plugins/coastal_defense/CoastalDefense_c.jpg",
 			   pluginDirectory: "plugins/coastal_defense",
+			   size: "custom",
 			   width: 835,
-			   height: 625,
 			   _state: {},
 			   _deactivated: false,
 			   
@@ -101,6 +102,7 @@ define([
 	               };
 				   self = this;
 				   domClass.add(this.container, "claro");
+				   domClass.add(this.container, "plugin-cd");
 				   this.cdTool = new cd(this, configFile, interfaceConfigFile);
 				   this.cdTool.initialize(this.cdTool);
 			   },
