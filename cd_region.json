@@ -2,10 +2,10 @@
 	{
 		"location": "SE Florida",
 		"layers": {
-			"profileTransect": "http://dev.services2.coastalresilience.org/arcgis/rest/services/CoastalDefense/CD_SE_Florida/MapServer/1",
-			"profilePolygon": "http://dev.services2.coastalresilience.org/arcgis/rest/services/CoastalDefense/CD_SE_Florida/MapServer/2",
+			"profileTransect": "http://dev.services2.coastalresilience.org/arcgis/rest/services/Florida/Coastal_Defense/MapServer/1",
+			"profilePolygon": "http://dev.services2.coastalresilience.org/arcgis/rest/services/Florida/Coastal_Defense/MapServer/2",
 			"mapLayers": { 
-				"url": "http://dev.services2.coastalresilience.org/arcgis/rest/services/CoastalDefense/CD_SE_Florida/MapServer",
+				"url": "http://dev.services2.coastalresilience.org/arcgis/rest/services/Florida/Coastal_Defense/MapServer",
 				"habitatLayerIds": [3,4],
 				"profilePolygonLayerId": 2,
 				"profileTransectLayerId": 1

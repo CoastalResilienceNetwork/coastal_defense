@@ -179,7 +179,7 @@ define([
 								around: dojo.byId('regionButton'),
 								orient: ["after"]
 							});
-							self.adjustInterfaceTooltip("chooseRegionButtonTooltip", 15, 10, 15);
+							self.adjustInterfaceTooltip("chooseRegionButtonTooltip", 10, 10, 15);
 						}
 						
 						if ( dojo.byId('chooseProfileButton_dropdown') && dijit.byId('habitatScenarioButton').get('disabled') ) {
@@ -197,7 +197,7 @@ define([
 								around: dojo.byId('habitatScenarioButton'),
 								orient: ["after"]
 							});
-							self.adjustInterfaceTooltip("chooseHabitatButtonTooltip", 15, 10, 15);
+							self.adjustInterfaceTooltip("chooseHabitatButtonTooltip", 10, 10, 15);
 						}
 					}
 				});
@@ -485,7 +485,7 @@ define([
 										around: dojo.byId('habitatScenarioButton'),
 										orient: ["after"]
 									});
-									self.adjustInterfaceTooltip("chooseHabitatButtonTooltip", 15, 10, 15);
+									self.adjustInterfaceTooltip("chooseHabitatButtonTooltip", 10, 10, 15);
 								 } else {
 								 	self.runScenarioButtonTooltip.open(dojo.byId("runScenarioButton"));
 								 }
@@ -619,7 +619,7 @@ define([
 								around: dojo.byId('regionButton'),
 								orient: ["after"]
 							});
-							self.adjustInterfaceTooltip("chooseRegionButtonTooltip", 15, 10, 15);
+							self.adjustInterfaceTooltip("chooseRegionButtonTooltip", 10, 10, 15);
 						}
 					 }
 			    });
@@ -3271,26 +3271,39 @@ define([
 				dojo.addClass(dojo.body(), "claro");
 				this.runScenarioButtonTooltip = new Tooltip({
 			        connectId: ["runScenarioButton"],
+					class:"plugin-cd",
 			        label: "Run model with current parameters.",
-					showDelay: 200
+					showDelay: 200,
+					onShow: function() {
+						dojo.addClass(this.domNode, "plugin-cd");
+					}
 			    });
 				
 				this.coralReefCheckBoxTooltip = new Tooltip({
 			        connectId: ["coralReefPanel_button_title"],
 			        label: "(Disabled) No coral reef habitat available to modify.",
-					showDelay: 200
+					showDelay: 200,
+					onShow: function() {
+						dojo.addClass(this.domNode, "plugin-cd");
+					}
 			    });
 				
 				this.mangroveCheckBoxTooltip = new Tooltip({
 			        connectId: ["mangrovePanel_button_title"],
 			        label: "(Disabled) No mangrove habitat available to modify.",
-					showDelay: 200
+					showDelay: 200,
+					onShow: function() {
+						dojo.addClass(this.domNode, "plugin-cd");
+					}
 			    });
 				
 				this.underwaterStructureCheckBoxTooltip = new Tooltip({
 			        connectId: ["underwaterStructurePanel_button_title"],
 			        label: "(Disabled) No profile to place an underwater structure.",
-					showDelay: 200
+					showDelay: 200,
+					onShow: function() {
+						dojo.addClass(this.domNode, "plugin-cd");
+					}
 			    });
 				
 				this.chooseRegionButtonTooltip = new TooltipDialog({
@@ -3301,6 +3314,7 @@ define([
 						dojo.style(this._popupWrapper,"zIndex", 10000);
 					}
 				});
+				dojo.addClass(this.chooseRegionButtonTooltip.domNode, "plugin-cd");
 				this.chooseRegionButtonTooltip.startup();
 
 				dojo.connect(dojo.byId('regionButton'), 'onClick', function(){
@@ -3315,6 +3329,7 @@ define([
 						dojo.style(this._popupWrapper,"zIndex", 10000);
 					}
 				});
+				dojo.addClass(this.chooseProfileButtonTooltip.domNode, "plugin-cd");
 				this.chooseProfileButtonTooltip.startup();
 
 				dojo.connect(dojo.byId('chooseProfileButton'), 'onClick', function(){
@@ -3324,11 +3339,13 @@ define([
 				this.chooseHabitatButtonTooltip = new TooltipDialog({
 					id: 'chooseHabitatButtonTooltip',
 					style: "max-width:175px; line-height:1;",
+					class:"plugin-cd",
 					content: "3. Click to select a habitat<br><span style='margin-left:15px;'>scenario for analysis.</span>",
 					onShow: function() {
 						dojo.style(this._popupWrapper,"zIndex", 10000);
 					}
 				});
+				dojo.addClass(this.chooseHabitatButtonTooltip.domNode, "plugin-cd");
 				this.chooseHabitatButtonTooltip.startup();
 				
 				dojo.connect(dojo.byId('habitatScenarioButton'), 'onClick', function(){
@@ -3462,7 +3479,7 @@ define([
 										around: dojo.byId('habitatScenarioButton'),
 										orient: ["after"]
 									});
-									self.adjustInterfaceTooltip("chooseHabitatButtonTooltip", 15, 10, 15);
+									self.adjustInterfaceTooltip("chooseHabitatButtonTooltip", 10, 10, 15);
 								});
 							} else if (jobInfo.jobStatus == 'esriJobFailed') {
 								self.findProfileProgressBar.set({ "value": self.findProfileProgressBar.get("maximum") });

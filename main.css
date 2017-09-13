@@ -659,11 +659,6 @@ background-position: -2px center !important;
 height: 26px !important;
 }
 
-#dijit__MasterTooltip_0 {
-max-width:175px !important;
-line-height:1;
-}
-
 #cd-tc .nowrapTabStrip .dijitTabContainerTop-tabs {
 width: 100% !important;
 }
@@ -877,4 +872,93 @@ width: 14px;
 height: 14px;
 -webkit-font-smoothing: antialiased;
 color: #fff;
+}
+
+.plugin-cd div.dijitTooltipContainer {
+background-color: #ccd5d5; 
+border: 1px solid #ccd5d5;
+color: #555;
+background-image:none !important;
+}
+
+.plugin-cd div.dijitTooltipConnector  {
+background-image:none !important;
+}
+
+.plugin-cd div.dijitTooltipConnector:after, .plugin-cd div.dijitTooltipConnector:before {
+right: 50%;
+top: 50%;
+border: solid transparent;
+content: " ";
+height: 0;
+width: 0;
+position: absolute;
+pointer-events: none;
+}
+
+.plugin-cd div.dijitTooltipConnector:after {
+border-color: rgba(68, 68, 68, 0);
+border-width: 5px;
+}
+.plugin-cd div.dijitTooltipConnector:before {
+border-color: rgba(204, 204, 204, 0);
+border-width: 6px;
+}
+
+.plugin-cd div.dijitTooltipConnector:after {
+border-right-color: #ccd5d5;
+margin-top: -5px;
+margin-right: -1px;
+}
+.plugin-cd div.dijitTooltipConnector:before {
+border-right-color: #ccd5d5;
+margin-top: -6px;
+margin-right: -1px;
+}
+
+#dijit__MasterTooltip_0 {
+max-width:175px !important;
+line-height:1;
+}
+
+#dijit__MasterTooltip_0 div.dijitTooltipContainer {
+background-color: #ccd5d5; 
+border: 1px solid #ccd5d5;
+color: #555;
+background-image:none !important;
+}
+
+#dijit__MasterTooltip_0 div.dijitTooltipConnector  {
+background-image:none !important;
+}
+
+#dijit__MasterTooltip_0 div.dijitTooltipConnector:after, #dijit__MasterTooltip_0 div.dijitTooltipConnector:before {
+right: 25%;
+top: 50%;
+border: solid transparent;
+content: " ";
+height: 0;
+width: 0;
+position: absolute;
+pointer-events: none;
+}
+
+#dijit__MasterTooltip_0 div.dijitTooltipConnector:after {
+border-color: rgba(68, 68, 68, 0);
+border-width: 5px;
+}
+#dijit__MasterTooltip_0 div.dijitTooltipConnector:before {
+border-color: rgba(204, 204, 204, 0);
+border-width: 6px;
+}
+
+#dijit__MasterTooltip_0 div.dijitTooltipConnector:after {
+border-right-color: #ccd5d5;
+margin-top: -5px;
+margin-right: -2px;
+}
+#dijit__MasterTooltip_0 div.dijitTooltipConnector:before {
+border-right-color: #ccd5d5;
+margin-top: -6px;
+margin-right: -2px;
 }
