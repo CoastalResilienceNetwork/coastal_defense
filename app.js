@@ -226,38 +226,46 @@ define([
 				
 				//Geographic Parameters
 				state.controls.regionButton = {};
-				state.controls.regionButton.label = this.regionButton.get("label");
+				state.controls.regionButton.isNative = true;
+				state.controls.regionButton.value = this.regionButton.value;
 				state.controls.chooseProfileButton = {};
 				state.controls.chooseProfileButton.disabled = this.chooseProfileButton.get("disabled");
 					
 				//Wave Parameters
 				state.controls.windWaveButton = {};
-				state.controls.windWaveButton.label = this.windWaveButton.get("label");
-				state.controls.windWaveButton.disabled = this.windWaveButton.get("disabled");
+				state.controls.windWaveButton.isNative = true;
+				state.controls.windWaveButton.value = this.windWaveButton.value;
+				state.controls.windWaveButton.disabled = this.windWaveButton.disabled;
 				state.controls.waveHeightBox = {};
 				state.controls.waveHeightBox.value = this.waveHeightBox.get("value");
 				state.controls.wavePeriodBox = {};
 				state.controls.wavePeriodBox.value = this.wavePeriodBox.get("value");
 				state.controls.waveButton = {};
-				state.controls.waveButton.label = this.windButton.get("label");
-				state.controls.waveButton.disabled = this.windButton.get("disabled");
+				state.controls.waveButton.isNative = true;
+				state.controls.waveButton.value = this.waveButton.value;
+				state.controls.waveButton.disabled = this.waveButton.disabled;
 				state.controls.windButton = {};
-				state.controls.windButton.label = this.windButton.get("label");
-				state.controls.windButton.disabled = this.windButton.get("disabled");
+				state.controls.windButton.isNative = true;
+				state.controls.windButton.value = this.windButton.value;
+				state.controls.windButton.disabled = this.windButton.disabled;
 				state.controls.hurricaneButton = {};
-				state.controls.hurricaneButton.label =this.hurricaneButton.get("label");
-				state.controls.hurricaneButton.disabled = this.hurricaneButton.get("disabled");
+				state.controls.hurricaneButton.isNative = true;
+				state.controls.hurricaneButton.value = this.hurricaneButton.value;
+				state.controls.hurricaneButton.disabled = this.hurricaneButton.disabled;
 				
 				//Water Parameters
 				state.controls.waterTypeButton = {};
-				state.controls.waterTypeButton.label = this.waterTypeButton.get("label");
-				state.controls.waterTypeButton.disabled = this.waterTypeButton.get("disabled");
+				state.controls.waterTypeButton.isNative = true;
+				state.controls.waterTypeButton.value = this.waterTypeButton.value;
+				state.controls.waterTypeButton.disabled = this.waterTypeButton.disabled;
 				state.controls.seaLevelRiseButton = {};
-				state.controls.seaLevelRiseButton.label = this.seaLevelRiseButton.get("label");
-				state.controls.seaLevelRiseButton.disabled = this.seaLevelRiseButton.get("disabled");
+				state.controls.seaLevelRiseButton.isNative = true;
+				state.controls.seaLevelRiseButton.value = this.seaLevelRiseButton.value;
+				state.controls.seaLevelRiseButton.disabled = this.seaLevelRiseButton.disabled;
 				state.controls.tideLevelButton = {};
-				state.controls.tideLevelButton.label = this.tideLevelButton.get("label");
-				state.controls.tideLevelButton.disabled = this.tideLevelButton.get("disabled");
+				state.controls.tideLevelButton.isNative = true;
+				state.controls.tideLevelButton.value = this.tideLevelButton.value;
+				state.controls.tideLevelButton.disabled = this.tideLevelButton.disabled;
 				
 				//Habitat Parameters
 				state.habitatScenarioTitleDiv = this.habitatScenarioTitleDiv.innerHTML;
@@ -445,7 +453,13 @@ define([
 
 								for (var control in state.controls) {
 									 for (property in state.controls[control]) {
-										self[control].set(property, state.controls[control][property]);
+										if (property != "isNative") {
+											if (_.has(state.controls[control], "isNative") && state.controls[control].isNative) {
+												self[control][property] = state.controls[control][property];
+											} else {
+												self[control].set(property, state.controls[control][property]);
+											}
+										}
 									 }
 								 }
 
@@ -533,7 +547,7 @@ define([
 					//hack to force panel to select coral reef by selecting another child then coral reef again
 					dijit.byId('habitatPane').selectChild('mangrovePanel');
 					dijit.byId('habitatPane').selectChild('coralReefPanel');
-					dijit.byId('habitatPane').resize({h:370});
+					dijit.byId('habitatPane').resize({h:380});
 				}
 				
 				if (this._map.getLayer("cd_profileTransect") != undefined) {
@@ -557,7 +571,7 @@ define([
 						useMenu: false,
 						useSlider: false,
 				    }, "tc1-prog");
-					domClass.add(this.tc.domNode, "claro");
+					domClass.add(this.tc.domNode, "cr-dojo-dijits");
 				this.tc.startup();
 				this.tc.resize();
 				
@@ -565,7 +579,7 @@ define([
 				this.tabHelp = new ContentPane({
 			         title: "Overview",
 					 id: "cd-tc-Help",
-					 style: "position:relative;width:823px;height:553px;overflow:hidden;",
+					 style: "position:relative;width:823px;height:590px;overflow:visible;",
 					 isLayoutContainer: true,
 					 onShow: function() {
 						popup.close(self.chooseRegionButtonTooltip);
@@ -592,13 +606,14 @@ define([
 			    this.tabInputs = new ContentPane({
 			         title: "Inputs",
 					 id: "cd-tc-Inputs",
-					 style: "position:relative;width:823px;height:553px;overflow:hidden;",
+					 style: "position:relative;width:823px;height:590px;overflow:visible;",
 			         isLayoutContainer: true,
 					 onShow: function() {
 						if (!this.profileChart) {
 							self.resizeProfileChart();
 						}
 						if( dijit.byId('chooseProfileButton').get('disabled') ){
+							console.log('regionOpen');
 							popup.open({
 								popup: self.chooseRegionButtonTooltip,
 								around: dojo.byId('regionButton'),
@@ -616,7 +631,7 @@ define([
 			    this.tabResults = new ContentPane({
 			         title: "Results",
 					 id: "cd-tc-Results",
-					 style: "position:relative;width:823px;height:553px;overflow:hidden;",
+					 style: "position:relative;width:823px;height:590px;overflow:visible;",
 					 isLayoutContainer: true,
 					 onShow: function() {
 						self.resizeResultsChart();
@@ -637,7 +652,7 @@ define([
 					this.tabDebug = new ContentPane({
 						 title: "Server Messages",
 						 id: "cd-tc-Debug",
-						 style: "position:relative;width:823px;height:553px;",
+						 style: "position:relative;width:823px;height:590px;",
 						 isLayoutContainer: true,
 						 onShow: function() {
 							popup.close(self.chooseRegionButtonTooltip);
@@ -731,15 +746,31 @@ define([
 					var regionUnitsContentDiv = domConstruct.create("div", { id:"regionUnitsContentDiv", style:"position:relative;" });
 					regionUnitsPanel.set('content', regionUnitsContentDiv);
 
-					var regionLabel = domConstruct.create("div", {innerHTML: "Choose Region:", id:"regionLabel"});
+					var regionLabel = domConstruct.create("div", {innerHTML: "Choose Region:", id:"regionLabel" });
 					regionUnitsContentDiv.appendChild(regionLabel);
 					
 					var regionDiv = domConstruct.create("div", { id:"regionDiv" });
 					regionUnitsContentDiv.appendChild(regionDiv);
 					
+					var regionButtonDiv = domConstruct.create("div", { 
+						className: "styled-select",
+						style:"width:125px;display:inline-block;" 
+					}, regionDiv);
+					this.regionButton = domConstruct.create("select", { id: "regionButton", name: "regionButton" }, regionButtonDiv);
+					domConstruct.create("option", { innerHTML: " -- ", value: "" }, this.regionButton);
+					array.forEach(this._data[this.parameters.regionIndex].extents.subRegions, function(value, key) {
+						self.key = key;
+						domConstruct.create("option", { innerHTML: value.name, value: value.name, key: key }, self.regionButton);
+					});
+					on(this.regionButton, "change", function() {
+						var key = this.selectedIndex-1;
+						self.regionSelect(this.value, key, self);
+					});
+					
+					/* 
 				    //Add Button to select region
 					var regionMenu = new DropDownMenu({ style: "display: none;"});
-					domClass.add(regionMenu.domNode, "claro");
+					domClass.add(regionMenu.domNode, "cr-dojo-dijits");
 					
 					_.each(this._data[this.parameters.regionIndex].extents.subRegions, function(value, key){
 						self.key = key;
@@ -748,6 +779,7 @@ define([
 							onClick: function(){
 								self.regionButton.set("label", this.label);
 								self.regionSelect(this.label, key, self);
+								domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 							}
 						});
 						regionMenu.addChild(menuItem);
@@ -759,59 +791,45 @@ define([
 						dropDown: regionMenu,
 						id: "regionButton"
 					});
-					
-					regionDiv.appendChild(this.regionButton.domNode);
-					
-					var unitsContentDiv = domConstruct.create("div", {id:"unitsContentDiv", style:"display:none;"});
-					regionUnitsContentDiv.appendChild(unitsContentDiv);
-					
-					var unitsTypeLabel = domConstruct.create("div", {innerHTML: "Choose Units:", id:"unitsTypeLabel"});
-					unitsContentDiv.appendChild(unitsTypeLabel);
-
-					var unitsDiv = domConstruct.create("div", {id:"unitsDiv"});
-					var unitsMenu = new DropDownMenu({ style: "display: none;"});
-					domClass.add(unitsMenu.domNode, "claro");
-					
-					var units = ["Meters","Feet"]
-					_.each(units, function(value){
-						var menuItem = new MenuItem({
-							label: value,
-							onClick: function(){ 
-								self.unitsButton.set("label", this.label);
-								self.updateInterfaceWithNewUnits(this.label.toLowerCase());
+					on(this.regionButton.domNode, "click", function(evt) {
+						var dropDown = self.regionButton.dropDown.domNode.parentNode;
+						window.setTimeout(function() {
+							if(dropDown) {
+								domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
 							}
-						});
-						unitsMenu.addChild(menuItem);
-					});	
-
-					this.unitsButton = new ComboButton({
-						label: "Meters",
-						name: "unitsButton",
-						dropDown: unitsMenu,
-						id: "unitsButton",
-						disabled: true
+						}, 100);
+					});
+					on(this.regionButton.focusNode, "mousedown", function(evt) {
+						var dropDown = self.regionButton.dropDown.domNode.parentNode;
+						window.setTimeout(function() {
+							if(dropDown) {
+								domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+							}
+						}, 100);
+					});
+					on(this.regionButton, "blur", function(evt) {
+						var dropDown = this.dropDown.domNode.parentNode;
+						domStyle.set(dropDown, { "display":"none" });
 					});
 					
-					unitsDiv.appendChild(this.unitsButton.domNode);
+					regionDiv.appendChild(this.regionButton.domNode); */
 					
-					unitsContentDiv.appendChild(unitsDiv); 
-					
-					dojo.addClass(dojo.body(), 'claro');
-					var chooseProfileButtonDiv = domConstruct.create("div", {id:"chooseProfileButtonDiv"});
+					var chooseProfileButtonDiv = domConstruct.create("div", { id:"chooseProfileButtonDiv" });
 					regionUnitsContentDiv.appendChild(chooseProfileButtonDiv);
 				
 					this.chooseProfileButton = new Button({
 				        label: "Click to Set Profile Location",
 						id: "chooseProfileButton",
+						style: "width: 225px;",
 						disabled: true,
-				        onClick: function(){ 
-							self.setClickLocation(self._container.parentNode.parentNode.id);
+				        onClick: function(){
+							self.setClickLocation(self._container.parentNode.id);
 						}
 				    });
 					chooseProfileButtonDiv.appendChild(this.chooseProfileButton.domNode);
 					
 					//Get Units Choice
-					this.currentUnits = (this.unitsButton.get("label") == "Meters") ? this.toolUnits.meters : this.toolUnits.feet;
+					this.currentUnits = this.toolUnits.meters;
 					
 				}
 
@@ -831,10 +849,47 @@ define([
 				var waveTypeLabel = domConstruct.create("div", {innerHTML: "Wave Conditions:", id:"waveTypeLabel"});
 				windWaveContentDiv.appendChild(waveTypeLabel);	
 				var waveTypeDiv = domConstruct.create("div", { id:"waveTypeDiv" });
-				windWaveContentDiv.appendChild(waveTypeDiv);	
+				windWaveContentDiv.appendChild(waveTypeDiv);
+				
+				var windWaveButtonDiv = domConstruct.create("div", { 
+					className: "styled-select",
+					style:"width:105px;" 
+				}, waveTypeDiv);
+				this.windWaveButton = domConstruct.create("select", { name: "windWaveButton", disabled:true }, windWaveButtonDiv);
+				array.forEach(this._interface.waveType, function(value) {
+					domConstruct.create("option", { innerHTML: value.name, value: value.value }, self.windWaveButton);
+				});
+				on(this.windWaveButton, "change", function() {
+					switch (this.value) {
+						case "Direct":
+							dojo.style("windContentDiv", "display", "none");
+							dojo.style("waveContentDiv", "display", "block");
+							dojo.style("hurricaneContentDiv", "display", "none");
+							break;
+						case "Direct Input":
+							dojo.style("windContentDiv", "display", "none");
+							dojo.style("waveContentDiv", "display", "block");
+							dojo.style("hurricaneContentDiv", "display", "none");
+							break;
+						case "From Wind":
+							dojo.style("windContentDiv", "display", "block");
+							dojo.style("waveContentDiv", "display", "none");
+							dojo.style("hurricaneContentDiv", "display", "none");
+							break;
+						case "From Hurricane":
+							dojo.style("windContentDiv", "display", "none");
+							dojo.style("waveContentDiv", "display", "none");
+							dojo.style("hurricaneContentDiv", "display", "block");
+							break;
+					}
+				});
+				
+				
+				/* 
+				
 				
 				var windWaveMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(windWaveMenu.domNode, "claro");
+				domClass.add(windWaveMenu.domNode, "cr-dojo-dijits");
 			
 				_.each(this._interface.waveType, function(value, key){
 						var menuItem = new MenuItem({
@@ -865,6 +920,8 @@ define([
 										dojo.style("hurricaneContentDiv", "display", "block");
 										break;
 								}
+								
+								domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 							}
 						});
 					windWaveMenu.addChild(menuItem);
@@ -877,8 +934,28 @@ define([
 					id: "windWaveButton",
 					disabled: true
 				});
+				on(this.windWaveButton.domNode, "click", function(evt) {
+					var dropDown = self.windWaveButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.windWaveButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.windWaveButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.windWaveButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
+				});
 
-				waveTypeDiv.appendChild(this.windWaveButton.domNode);
+				waveTypeDiv.appendChild(this.windWaveButton.domNode); */
 				
 				/* var waveTypeHelpDiv = domConstruct.create("div", {innerHTML: "<span>?</span>", id:"waveTypeHelp", style: "position:absolute; width: 20px; height: 20px; font-size: 14px; right: 20px; top: 0px;" });
 				windWaveContentDiv.appendChild(waveTypeHelpDiv); */
@@ -931,9 +1008,26 @@ define([
 
 				var waveComboLabel = domConstruct.create("div", {innerHTML: "Wave Strength:", id:"waveComboLabel"});
 				waveContentDiv.appendChild(waveComboLabel);	
+				
+				
+				
+				var waveButtonDiv = domConstruct.create("div", { 
+					className: "styled-select",
+					style:"width:125px;display:inline-block;" 
+				}, waveContentDiv);
+				this.waveButton = domConstruct.create("select", { name: "waveButton", disabled:true }, waveButtonDiv);
+				array.forEach(this._interface.waves, function(value) {
+					domConstruct.create("option", { innerHTML: value.name, value: value.value }, self.waveButton);
+				});
+				on(this.waveButton, "change", function() {
+					self.waveHeightBox.set("value", self.parameters.wave[this.value].height);
+					self.wavePeriodBox.set("value", self.parameters.wave[this.value].period);
+				});
+				
+				/* 
 
 				var waveMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(waveMenu.domNode, "claro");
+				domClass.add(waveMenu.domNode, "cr-dojo-dijits");
 				_.each(this._interface.waves, function(value, key){
 					var menuItem = new MenuItem({
 						label: value.name,
@@ -941,6 +1035,7 @@ define([
 							self.waveButton.set("label", this.label);
 							self.waveHeightBox.set("value", self.parameters.wave[this.label].height);
 							self.wavePeriodBox.set("value", self.parameters.wave[this.label].period);
+							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 						}
 					});
 				
@@ -954,23 +1049,53 @@ define([
 					id: "waveButton",
 					disabled: true
 				});
+				
+				on(this.waveButton.domNode, "click", function(evt) {
+					var dropDown = self.waveButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.waveButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.waveButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.waveButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
+				});
 			
 				waveContentDiv.appendChild(this.waveButton.domNode);
-
+ */
 				var windContentDiv = domConstruct.create("div", { id:"windContentDiv", style:"display:none;"});
 				windWaveContentDiv.appendChild(windContentDiv);	
 
 				var windComboLabel = domConstruct.create("div", {innerHTML: "Wind Strength:", id:"windComboLabel"});
 				windContentDiv.appendChild(windComboLabel);	
+				
+				var windButtonDiv = domConstruct.create("div", { 
+					className: "styled-select",
+					style:"width:125px;display:inline-block;" 
+				}, windContentDiv);
+				this.windButton = domConstruct.create("select", { name: "windButton", disabled:true }, windButtonDiv);
+				array.forEach(this._interface.winds, function(value) {
+					domConstruct.create("option", { innerHTML: value.name, value: value.value }, self.windButton);
+				});
 
-				var windMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(windMenu.domNode, "claro");
+				/* var windMenu = new DropDownMenu({ style: "display: none;"});
+				domClass.add(windMenu.domNode, "cr-dojo-dijits");
 				_.each(this._interface.winds, function(value, key){
 					var menuItem = new MenuItem({
 						label: value.name,
 						onClick: function(){
-							/*self.updateWaveBtn(this.label)*/
 							self.windButton.set("label", this.label);
+							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 						}
 					});
 				
@@ -984,23 +1109,54 @@ define([
 					id: "windButton",
 					disabled: true
 				});
+				on(this.windButton.domNode, "click", function(evt) {
+					var dropDown = self.windButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.windButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.windButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.windButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
+				});
 			
 				windContentDiv.appendChild(this.windButton.domNode);
-				
+				 */
 				var hurricaneContentDiv = domConstruct.create("div", { id:"hurricaneContentDiv", style:"display:none;"});
 				windWaveContentDiv.appendChild(hurricaneContentDiv);
 
 				var hurricaneComboLabel = domConstruct.create("div", {innerHTML: "Hurricane Category:", id:"hurricaneComboLabel"});
-				hurricaneContentDiv.appendChild(hurricaneComboLabel);	
+				hurricaneContentDiv.appendChild(hurricaneComboLabel);
+				
+				
+				var hurricaneButtonDiv = domConstruct.create("div", { 
+					className: "styled-select",
+					style:"width:125px;" 
+				}, hurricaneContentDiv);
+				this.hurricaneButton = domConstruct.create("select", { name: "hurricaneButton", disabled:true }, hurricaneButtonDiv);
+				array.forEach(this._interface.hurricane, function(value) {
+					domConstruct.create("option", { innerHTML: value.name, value: value.value }, self.hurricaneButton);
+				});
+				
 
-				var hurricaneMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(windMenu.domNode, "claro");
+				/* var hurricaneMenu = new DropDownMenu({ style: "display: none;"});
+				domClass.add(hurricaneMenu.domNode, "cr-dojo-dijits");
 				_.each(this._interface.hurricane, function(value, key){
 					var menuItem = new MenuItem({
 						label: value.name,
 						onClick: function(){
-							/*self.updateWaveBtn(this.label)*/
 							self.hurricaneButton.set("label", this.label);
+							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 						}
 					});
 					hurricaneMenu.addChild(menuItem);
@@ -1013,9 +1169,29 @@ define([
 					id: "hurricaneButton",
 					disabled: true
 				});
+				on(this.hurricaneButton.domNode, "click", function(evt) {
+					var dropDown = self.hurricaneButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.hurricaneButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.hurricaneButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.hurricaneButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
+				});
 			
 				hurricaneContentDiv.appendChild(this.hurricaneButton.domNode);				
-				
+				 */
 				wavePanel.set('content', windWaveContentDiv);	
 				//END ADD WAVE PANEL CONTENT
 			}
@@ -1038,14 +1214,28 @@ define([
 				var waterTypeDiv = domConstruct.create("div", { id:"waterTypeDiv" });
 				waterContentDiv.appendChild(waterTypeDiv);	
 				
-				var waterTypeMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(waterTypeMenu.domNode, "claro");
+				var waterTypeButtonDiv = domConstruct.create("div", { 
+					className: "styled-select",
+					style:"width:125px;" 
+				}, waterTypeDiv);
+				this.waterTypeButton = domConstruct.create("select", { name: "wave", disabled:true }, waterTypeButtonDiv);
+				array.forEach(this._interface.waterType, function(value) {
+					domConstruct.create("option", { innerHTML: value.name, value: value.value }, self.waterTypeButton);
+				});
+				this.waterTypeButton.value = "Tide";
+				on(this.waterTypeButton, "change", function() {
+					self.waterTypeButtonOnChange(this.value);
+				});
+				
+				/* var waterTypeMenu = new DropDownMenu({ style: "display: none;"});
+				domClass.add(waterTypeMenu.domNode, "cr-dojo-dijits");
 			
 				_.each(this._interface.waterType, function(value, key){
 					var menuItem = new MenuItem({
 						label: value.name,
 						onClick: function(){
 							self.waterTypeButtonOnChange(this.label);
+							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 						}
 					});
 					waterTypeMenu.addChild(menuItem);
@@ -1058,23 +1248,55 @@ define([
 					id: "waterTypeButton",
 					disabled: true
 				});
+				on(this.waterTypeButton.domNode, "click", function(evt) {
+					var dropDown = self.waterTypeButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.waterTypeButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.waterTypeButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.waterTypeButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
+				});
 
-				waterTypeDiv.appendChild(this.waterTypeButton.domNode);
+				waterTypeDiv.appendChild(this.waterTypeButton.domNode); */
 
 				var seaLevelRiseContentDiv = domConstruct.create("div", {id:"seaLevelRiseContentDiv", style: "display: none;"});
 				waterContentDiv.appendChild(seaLevelRiseContentDiv);
 				
 				var seaLevelRiseComboLabel = domConstruct.create("div", {innerHTML: "Sea Level Rise Scenario:", id:"seaLevelRiseComboLabel", class:"btnLabels"});
-				seaLevelRiseContentDiv.appendChild(seaLevelRiseComboLabel);	
-
+				seaLevelRiseContentDiv.appendChild(seaLevelRiseComboLabel);
+				
+				
+				var seaLevelRiseButtonDiv = domConstruct.create("div", { 
+					className: "styled-select",
+					style:"width:145px;" 
+				}, seaLevelRiseContentDiv);
+				this.seaLevelRiseButton = domConstruct.create("select", { name: "seaLevelRiseButton", disabled:true }, seaLevelRiseButtonDiv);
+				array.forEach(this._interface.seaLevel, function(value) {
+					domConstruct.create("option", { innerHTML: value.name, value: value.value }, self.seaLevelRiseButton);
+				});
+				
+/* 
 				var seaLevelRiseMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(seaLevelRiseMenu.domNode, "claro");
+				domClass.add(seaLevelRiseMenu.domNode, "cr-dojo-dijits");
 			
 				_.each(this._interface.seaLevel, function(value, key){
 					var menuItem = new MenuItem({
 						label: value.name,
 						onClick: function(){
 							self.seaLevelRiseButton.set("label", this.label);
+							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 						}
 					});
 					seaLevelRiseMenu.addChild(menuItem);
@@ -1087,10 +1309,30 @@ define([
 					id: "seaLevelRiseButton",
 					disabled: true
 				});
+				on(this.seaLevelRiseButton.domNode, "click", function(evt) {
+					var dropDown = self.seaLevelRiseButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.seaLevelRiseButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.seaLevelRiseButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.seaLevelRiseButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
+				});
 
 				//this.parameters.waterLevelKey = 3;  //Pre-set mhhw as the default and assign key - may want to include default values in json file at some point
 				
-				seaLevelRiseContentDiv.appendChild(this.seaLevelRiseButton.domNode);
+				seaLevelRiseContentDiv.appendChild(this.seaLevelRiseButton.domNode); */
 
 				//Create Stormsurge Drop down button
 				
@@ -1098,10 +1340,32 @@ define([
 				waterContentDiv.appendChild(tideLevelContentDiv);
 				
 				var tideLevelComboLabel = domConstruct.create("div", {innerHTML: "Tide Level:", id:"tideLevelComboLabel", class:"btnLabels"});
-				tideLevelContentDiv.appendChild(tideLevelComboLabel);	
+				tideLevelContentDiv.appendChild(tideLevelComboLabel);
+				
+				var tideLevelButtonDiv = domConstruct.create("div", { 
+					className: "styled-select",
+					style:"width:180px;" 
+				}, tideLevelContentDiv);
+				this.tideLevelButton = domConstruct.create("select", { name: "tideLevelButton", disabled:true }, tideLevelButtonDiv);
+				array.forEach(this._interface.tideLevel, function(value) {
+					domConstruct.create("option", { innerHTML: value.name, value: value.value }, self.tideLevelButton);
+				});
+				on(this.tideLevelButton, "change", function() {
+					if (this.value == 'Mean Lower Low Water' || this.value == 'Mean Sea Level') {
+						self.mangroveCheckBox.set("checked", false);
+						if (self.profileChart.getSeries("Mangrove (future)")) {
+							self.onHabitatCheckboxChange('mangrove', self.mangroveCheckBox);
+						}
+						self.mangroveCheckBox.set("disabled", true);
+						self.mangroveCheckBoxTooltip.set("label", "(Disabled) Mangrove habitat must be submerged to modify - set tide level to Mean Higher High Water or above.");
+					} else {
+						self.mangroveCheckBox.set("disabled", false);
+						self.mangroveCheckBoxTooltip.set("label", "Check to set a mangrove restoration scenario. Uncheck to run under current conditions.");
+					}
+				});
 
-				var tideLevelMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(tideLevelMenu.domNode, "claro");
+				/* var tideLevelMenu = new DropDownMenu({ style: "display: none;"});
+				domClass.add(tideLevelMenu.domNode, "cr-dojo-dijits");
 			
 				_.each(this._interface.tideLevel, function(value, key){
 					var menuItem = new MenuItem({
@@ -1119,6 +1383,7 @@ define([
 								self.mangroveCheckBox.set("disabled", false);
 								self.mangroveCheckBoxTooltip.set("label", "Check to set a mangrove restoration scenario. Uncheck to run under current conditions.");
 							}
+							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 						}
 					});
 					tideLevelMenu.addChild(menuItem);
@@ -1131,16 +1396,36 @@ define([
 					id: "tideLevelButton",
 					disabled: true
 				});
+				on(this.tideLevelButton.domNode, "click", function(evt) {
+					var dropDown = self.tideLevelButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.tideLevelButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.tideLevelButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.tideLevelButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
+				});
 				
 				//this.parameters.surgeLevelKey = 0;  //Pre-set mhhw as the default and assign key - may want to include default values in json file at some point
 			
-				tideLevelContentDiv.appendChild(this.tideLevelButton.domNode);
+				tideLevelContentDiv.appendChild(this.tideLevelButton.domNode); */
 				
 				waterPanel.set('content', waterContentDiv);
 			}
 			
 			this.waterTypeButtonOnChange = function(label) {
-				this.waterTypeButton.set("label", label);
+				//this.waterTypeButton.set("label", label);
 							
 				switch (label) {
 					case "Sea-Level Rise":
@@ -1166,7 +1451,7 @@ define([
 								this.reefResponseDegradationBox.set('disabled', true);
 							}
 						}
-						if (this.tideLevelButton.get('label') == 'Mean Lower Low Water' || this.tideLevelButton.get('label') == 'Mean Sea Level') {
+						if (this.tideLevelButton.value == -2 || this.tideLevelButton.value == 0) {
 							this.mangroveCheckBox.set("checked", false);
 							if (this.profileChart.getSeries("Mangrove (future)")) {
 								this.onHabitatCheckboxChange('mangrove', this.mangroveCheckBox);
@@ -1186,7 +1471,7 @@ define([
 				var habitatTitlePaneDiv = dijit.byId("habitatTitlePaneDiv");
 
 				var habitatScenarioMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(habitatScenarioMenu.domNode, "claro");
+				domClass.add(habitatScenarioMenu.domNode, "cr-dojo-dijits");
 			
 				_.each(this._interface.habitatScenario, function(value, key){
 					var menuItem = new MenuItem({
@@ -1195,6 +1480,7 @@ define([
 							//self.habitatScenarioButton.set("label", "Habitat Parameters");
 							self.habitatScenarioTitleDiv.innerHTML = this.label;
 							self.updateInterfaceInputs(this.label);
+							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 						}
 					});
 					habitatScenarioMenu.addChild(menuItem);
@@ -1205,15 +1491,35 @@ define([
 					name: "habitatScenarioButton",
 					dropDown: habitatScenarioMenu,
 					id: "habitatScenarioButton",
-					style: "position: relative; left: -6px; top: -2px;",
+					style: "position: relative; left: -6px; top: -5px;",
 					disabled: true
 				});
-				habitatTitlePaneDiv.domNode.appendChild(this.habitatScenarioButton.domNode);
+				on(this.habitatScenarioButton.domNode, "click", function(evt) {
+					var dropDown = self.habitatScenarioButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.habitatScenarioButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.habitatScenarioButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.habitatScenarioButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
+				});
 				
+				habitatTitlePaneDiv.domNode.appendChild(this.habitatScenarioButton.domNode);
 				
 				this.habitatScenarioTitleDiv = domConstruct.create("div", {
 					id:"habitatScenarioTitleDiv",
-					style: "position: absolute; width: 470px; height: 24px; top:0px; right: 10px; text-align: center; line-height: 24px;font-size: 16px; font-weight: bolder;"
+					style: "position: absolute; width: 470px; height: 25px; top:2px; right: 10px; text-align: center; line-height: 25px;font-size: 14px; font-weight: bolder; color:#fff;"
 				});
 				habitatTitlePaneDiv.domNode.appendChild(this.habitatScenarioTitleDiv);
 				
@@ -1323,7 +1629,7 @@ define([
 				
 				//Add Text Boxes
 				var inputWidth = "width: 60px;";
-				var inputHeight = "height: 34px;";
+				var inputHeight = "height: 28px;";
 				var inputMargin = "margin: 2px;";
 
 				this.reefShoreEdgeBox = new NumberSpinner({
@@ -1453,7 +1759,7 @@ define([
 				}, dojo.byId("cd_reefResponseTable"));
 				
 				var reefResponseMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(reefResponseMenu.domNode, "claro");
+				domClass.add(reefResponseMenu.domNode, "cr-dojo-dijits");
 				
 				var reefResponse = ["Keep Up", "Degrade"]
 				_.each(reefResponse, function(value){
@@ -1466,6 +1772,7 @@ define([
 							 } else {
 								self.reefResponseDegradationBox.set('disabled', true);
 							}
+							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 						}
 					});
 					reefResponseMenu.addChild(menuItem);
@@ -1477,6 +1784,26 @@ define([
 					dropDown: reefResponseMenu,
 					id: "reefResponseTypeButton",
 					disabled: true
+				});
+				on(this.reefResponseTypeButton.domNode, "click", function(evt) {
+					var dropDown = self.reefResponseTypeButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.reefResponseTypeButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.reefResponseTypeButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.reefResponseTypeButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
 				});
 
 				this.reefResponseDegradationBox = new NumberSpinner({
@@ -1542,7 +1869,7 @@ define([
 				
 				//Add Text Boxes
 				var inputWidth = "width: 60px;";
-				var inputHeight = "height: 34px;";
+				var inputHeight = "height: 28px;";
 				var inputMargin = "margin: 2px;";
 
 				this.mangroveShoreEdgeBox = new NumberSpinner({
@@ -1719,7 +2046,7 @@ define([
 				
 				//Add Text Boxes
 				var inputWidth = "width: 60px;";
-				var inputHeight = "height: 34px;";
+				var inputHeight = "height: 28px;";
 				var inputMargin = "margin: 2px;";
 
 				//Create Table Div for text boxes
@@ -1768,12 +2095,13 @@ define([
 				});
 
 				var underwaterStructureType = new DropDownMenu({ style: "display: none;"});
-					domClass.add(underwaterStructureType.domNode, "claro");
+					domClass.add(underwaterStructureType.domNode, "cr-dojo-dijits");
 				
 				var menuItem1 = new MenuItem({
 					label: "Reef Dome",
 					onClick: function(){
 						self.underwaterStructureTypeButtonOnChange(this.label);
+						domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 					}
 				});
 				underwaterStructureType.addChild(menuItem1);
@@ -1792,6 +2120,26 @@ define([
 					dropDown: underwaterStructureType,
 					id: "underwaterStructureTypeButton",
 					disabled: true
+				});
+				on(this.underwaterStructureTypeButton.domNode, "click", function(evt) {
+					var dropDown = self.underwaterStructureTypeButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.underwaterStructureTypeButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.underwaterStructureTypeButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.underwaterStructureTypeButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
 				});
 				
 				this.underwaterStructureHeightBox = new NumberSpinner({
@@ -1937,7 +2285,7 @@ define([
 				});
 				
 				var structureType = new DropDownMenu({ style: "display: none;"});
-					domClass.add(structureType.domNode, "claro");
+				domClass.add(structureType.domNode, "cr-dojo-dijits");
 				
 				var menuItem1 = new MenuItem({
 						label: "Levee",
@@ -1945,6 +2293,7 @@ define([
 							//this.parameters.windWaveBtnLabel = this.label;
 							self.structureTypeButton.set("label", this.label);
 							self.structureSlopeBox.set('disabled', false);
+							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 						}
 					});
 					structureType.addChild(menuItem1);
@@ -1954,6 +2303,7 @@ define([
 							//this.parameters.windWaveBtnLabel = this.label;
 							self.structureTypeButton.set("label", this.label);
 							self.structureSlopeBox.set('disabled', true);
+							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 						}
 					});
 					structureType.addChild(menuItem2);
@@ -1964,6 +2314,26 @@ define([
 					dropDown: structureType,
 					id: "structureTypeButton",
 					disabled: true
+				});
+				on(this.structureTypeButton.domNode, "click", function(evt) {
+					var dropDown = self.structureTypeButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.structureTypeButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.structureTypeButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.structureTypeButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
 				});
 				
 				this.structureHeightBox = new NumberSpinner({
@@ -2007,7 +2377,7 @@ define([
 				cpMain.domNode.appendChild(profileDataLoadingDiv);
 				
 				var profileDataLoadingContentDiv  = domConstruct.create("div", {id:"cd_dataLoadingContentDiv", style:"position: relative; width:175px; height: 100px; top: 50px; left: 145px; display:none"});
-				var profileDataLoadingTextDiv  = domConstruct.create("div", {id:"cd_dataLoadingTextDiv", innerHTML: "Please wait a moment for the profile data to load...", style:"position: relative; width:100%; margin: 0px 0px 10px 0px;; color: #444; font-size: 17px; font-weight: bolder;"});
+				var profileDataLoadingTextDiv  = domConstruct.create("div", {id:"cd_dataLoadingTextDiv", innerHTML: "Please wait a moment for the profile data to load...", style:"position: relative; width:100%; margin: 0px 0px 10px 0px;; color: #444; font-size: 15px; font-weight: bolder; line-height:18px;"});
 				profileDataLoadingContentDiv.appendChild(profileDataLoadingTextDiv);
 				var findProfileProgressBarDiv  = domConstruct.create("div", {id:"findProfileProgressBar", style:"position: relative; width:100%; height:20px; text-align: center;"});
 				profileDataLoadingContentDiv.appendChild(findProfileProgressBarDiv);
@@ -2020,7 +2390,7 @@ define([
 				}, "findProfileProgressBar");
 				
 				var profileNoDataHtml = "<center><img src='" + self.pluginDirectory + "/images/graph.png' class='errorImage'>Habitat Profile Graph</center>"
-				var profileNoDataHtmlContentDiv  = domConstruct.create("div", {id:"cd_noDataHtmlContentDiv", innerHTML: profileNoDataHtml, style:"position: relative; width:190px; height: 40px; top:60px; left: 135px; display: block; color: #99999A; font-size: 17px; font-weight: bolder;"});
+				var profileNoDataHtmlContentDiv  = domConstruct.create("div", {id:"cd_noDataHtmlContentDiv", innerHTML: profileNoDataHtml, style:"position: relative; width:190px; height: 40px; top:60px; left: 135px; display: block; color: #99999A; font-size: 15px; font-weight: bolder;"});
 				profileDataLoadingDiv.appendChild(profileNoDataHtmlContentDiv);
 				
 				var sliderHTML = '<div id="cd_sliderInputText"> <b> * Use the sliders to set the area where <span id="habitatSliderText">habitat is to be modified</span> * </b> <div>'
@@ -2086,30 +2456,31 @@ define([
 				
 				this.resultsContentPanel = new ContentPane({
 			    	id: 'cd-results-pane',
-					style: 'overflow:hidden;'
+					style: 'overflow:hidden;line-height:1;'
 			    });
 			    this.resultsContentPanel.startup();
 			    this.tabResults.addChild(this.resultsContentPanel);
 				
-				var resultsTitleDiv  = domConstruct.create("div", {id:"cd_resultsTitleDiv", innerHTML: "Modeled Wave Heights", style:"position: absolute;  left: 95px; top: 10px; width: 650px; color: #444; font-size: 16.5pt; font-weight:bolder; text-align: center; z-index: 10;"});
+				var resultsTitleDiv  = domConstruct.create("div", {id:"cd_resultsTitleDiv", innerHTML: "Modeled Wave Heights", style:"position: absolute;  left: 95px; top: 17px; width: 650px; color: #444; font-size: 16.5pt; font-weight:bolder; text-align: center; z-index: 10;"});
 				this.resultsContentPanel.domNode.appendChild(resultsTitleDiv);
 				
-				var resultsSubTitleDiv  = domConstruct.create("div", {id:"cd_resultsSubTitleDiv", innerHTML: "", style:"position: absolute; left: 125px; top: 40px; width: 520px; color: #444; font-size: 11pt; text-align: center; z-index: 10;"});
+				var resultsSubTitleDiv  = domConstruct.create("div", {id:"cd_resultsSubTitleDiv", innerHTML: "", style:"position: absolute; left: 110px; top: 45px; width: 520px; color: #444; font-size: 13px; text-align: center; z-index: 10;"});
 				this.resultsContentPanel.domNode.appendChild(resultsSubTitleDiv);
 				
-				var resultsChartTypeContentDiv = domConstruct.create("div", { id:"resultsChartTypeContentDiv", style:"position:absolute; width: 200px; right: 35px; top: 12px; display:block; z-index: 10;"});
+				var resultsChartTypeContentDiv = domConstruct.create("div", { id:"resultsChartTypeContentDiv", style:"position:absolute; width: 200px; right: 35px; top: 15px; display:block; z-index: 10;"});
 				this.resultsContentPanel.domNode.appendChild(resultsChartTypeContentDiv);	
 
-				var resultsChartTypeComboLabel = domConstruct.create("div", {innerHTML: "Habitat:", id:"resultsChartTypeComboLabel", style: "position: relative; left: 55px; width: 75px; line-height: 18px;"});
+				var resultsChartTypeComboLabel = domConstruct.create("div", {innerHTML: "Habitat:", id:"resultsChartTypeComboLabel", style: "position: relative; left: 50px; width: 75px; line-height: 25px;"});
 				resultsChartTypeContentDiv.appendChild(resultsChartTypeComboLabel);
 				
 				var resultsChartType = new DropDownMenu({ style: "display: none;"});
-				domClass.add(resultsChartType.domNode, "claro");
+				domClass.add(resultsChartType.domNode, "cr-dojo-dijits");
 				
 				var menuItem = new MenuItem({
 					label: "Coral Reef",
 					onClick: function(){
 						self.resultsChartTypeButton.set("label", this.label);
+						domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
 					}
 				});
 				resultsChartType.addChild(menuItem);
@@ -2122,14 +2493,35 @@ define([
 					id: "resultsChartTypeButton",
 					disabled: true
 				});
+				on(this.resultsChartTypeButton.domNode, "click", function(evt) {
+					var dropDown = self.resultsChartTypeButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.resultsChartTypeButton.focusNode, "mousedown", function(evt) {
+					var dropDown = self.resultsChartTypeButton.dropDown.domNode.parentNode;
+					window.setTimeout(function() {
+						if(dropDown) {
+							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
+						}
+					}, 100);
+				});
+				on(this.resultsChartTypeButton, "blur", function(evt) {
+					var dropDown = this.dropDown.domNode.parentNode;
+					domStyle.set(dropDown, { "display":"none" });
+				});
+				
 				var resultsChartTypeDiv = domConstruct.create("div", { id:"resultsChartTypeDiv", style:"position: absolute; left: 100px; top: -7px;" });
 				resultsChartTypeDiv.appendChild(this.resultsChartTypeButton.domNode);	
 				resultsChartTypeContentDiv.appendChild(resultsChartTypeDiv);
 				
-				var resultsHabitatMessage = domConstruct.create("div", { id:"resultsHabitatMessage", style:"position: absolute;top: 40px; right: 40px; width: 155px; z-index: 15; text-align: right; color: #444;"  });
+				var resultsHabitatMessage = domConstruct.create("div", { id:"resultsHabitatMessage", style:"position: absolute;top: 45px; right: 20px; max-width: 170px; z-index: 15; text-align: right; color: #444;"  });
 				this.resultsContentPanel.domNode.appendChild(resultsHabitatMessage);
 				
-				var resultsDataLoadingDiv  = domConstruct.create("div", {id:"cd_resultsDataLoadingDiv", style:"position: absolute; width:710px; height: 400px; top:22px; left: 77px; z-index:5; background: #ffffff; display:block;"});
+				var resultsDataLoadingDiv  = domConstruct.create("div", {id:"cd_resultsDataLoadingDiv", style:"position: absolute; width:710px; height: 400px; top:22px; left: 79px; z-index:5; background: #ffffff; display:block;"});
 				this.resultsContentPanel.domNode.appendChild(resultsDataLoadingDiv);
 				
 				var resultsDataLoadingContentDiv  = domConstruct.create("div", {id:"cd_resultsDataLoadingContentDiv", style:"position: relative; width:175px; height: 100px; top: 165px; left: 245px; display:none; text-align:center"});
@@ -2903,35 +3295,43 @@ define([
 				
 				this.chooseRegionButtonTooltip = new TooltipDialog({
 					id: 'chooseRegionButtonTooltip',
-					style: "width: 155px;",
-					content: "1. Click to select a region<br>&nbsp;&nbsp;&nbsp;&nbsp;for analysis.",
+					style: "max-width:175px; line-height:1;",
+					content: "1. Click to select a region<br><span style='margin-left:15px;'>for analysis</span>.",
+					onShow: function() {
+						dojo.style(this._popupWrapper,"zIndex", 10000);
+					}
 				});
 				this.chooseRegionButtonTooltip.startup();
-				
 
-				dojo.connect(dojo.byId('regionButton'), 'onclick', function(){
+				dojo.connect(dojo.byId('regionButton'), 'onClick', function(){
 					popup.close(self.chooseRegionButtonTooltip);
 				});
 				
 				this.chooseProfileButtonTooltip = new TooltipDialog({
 					id: 'chooseProfileButtonTooltip',
-					style: "width: 145px;",
-					content: "2. Click to set a profile<br>&nbsp;&nbsp;&nbsp;&nbsp; for analysis."
+					style: "max-width:175px; line-height:1;",
+					content: "2. Click to set a profile<br><span style='margin-left:15px;'>for analysis</span>.",
+					onShow: function() {
+						dojo.style(this._popupWrapper,"zIndex", 10000);
+					}
 				});
 				this.chooseProfileButtonTooltip.startup();
 
-				dojo.connect(dojo.byId('chooseProfileButton'), 'onclick', function(){
+				dojo.connect(dojo.byId('chooseProfileButton'), 'onClick', function(){
 					popup.close(self.chooseProfileButtonTooltip);
 				});
 				
 				this.chooseHabitatButtonTooltip = new TooltipDialog({
 					id: 'chooseHabitatButtonTooltip',
-					style: "width: 175px;",
-					content: "3. Click to select a habitat<br>&nbsp;&nbsp;&nbsp;&nbsp;scenario for analysis."
+					style: "max-width:175px; line-height:1;",
+					content: "3. Click to select a habitat<br><span style='margin-left:15px;'>scenario for analysis.</span>",
+					onShow: function() {
+						dojo.style(this._popupWrapper,"zIndex", 10000);
+					}
 				});
 				this.chooseHabitatButtonTooltip.startup();
 				
-				dojo.connect(dojo.byId('habitatScenarioButton'), 'onclick', function(){
+				dojo.connect(dojo.byId('habitatScenarioButton'), 'onClick', function(){
 					popup.close(self.chooseHabitatButtonTooltip);
 				});
 			}
@@ -3002,6 +3402,7 @@ define([
 				this.resetResultsPane();
 				dojo.style(dojo.byId(id), "display", "none");
 				dojo.byId("cd_noResultsDataHtmlContentDiv").innerHTML = "<center><img src='" + self.pluginDirectory + "/images/graph.png' class='errorImage'>Results Graph</center>";
+				popup.close(self.chooseProfileButtonTooltip);
 				
 				if (this.profileTransect){
 					this.profileTransect.hide();
@@ -3023,6 +3424,7 @@ define([
 					this.habitatLayer.setVisibleLayers(visibleLayers);
 					
 					dojo.connect(this.profilePolygon, "onClick", function(evt) {
+						popup.close(self.chooseProfileButtonTooltip);
 						domStyle.set(dojo.byId(id), "display","block");
 						dojo.byId("cd_noDataHtmlContentDiv").innerHTML = "<center><img src='" + self.pluginDirectory + "/images/graph.png' class='errorImage'>Habitat Profile Graph</center>";
 						domStyle.set("cd_noDataHtmlContentDiv", "display", "none");
@@ -3146,9 +3548,8 @@ define([
 			}
 			
 			this.showProfilePolygonToolTip = function(evt){
-				var sidebarWidth = dojo.position(dojo.query(".sidebar")[0]).w;
-				var px = evt.clientX - sidebarWidth;
-				var py = evt.clientY - sidebarWidth;
+				var px = evt.screenPoint.x;
+				var py = evt.screenPoint.y;
 				domStyle.set("profilePolygonTooltipDiv", { left: (px + 15) + "px", top: (py) + "px" });
 				domStyle.set("profilePolygonTooltipDiv", "display", "block");
 			}
@@ -3160,15 +3561,15 @@ define([
 				this.habitatScenarioButton.set("disabled", false);
 				this.habitatRangeSlider.set("disabled", false);
 				this.runScenarioButton.set("disabled", false);
-				this.windWaveButton.set("disabled", false);
-				this.windButton.set("disabled", false);
-				this.waveButton.set("disabled", false);
-				this.wavePeriodBox.set("disabled", false);
-				this.waveHeightBox.set("disabled", false);
-				this.hurricaneButton.set("disabled", false);
-				this.waterTypeButton.set("disabled", false);
-				this.seaLevelRiseButton.set("disabled", false);
-				this.tideLevelButton.set("disabled", false);
+				this.windWaveButton.disabled = false;
+				this.windButton.disabled = false;
+				this.waveButton.disabled = false;
+				this.wavePeriodBox.disabled = false;
+				this.waveHeightBox.disabled = false;
+				this.hurricaneButton.disabled = false;
+				this.waterTypeButton.disabled = false;
+				this.seaLevelRiseButton.disabled = false;
+				this.tideLevelButton.disabled = false;
 			}
 			
 			this.disableInterfaceInputs = function() {
@@ -3178,15 +3579,15 @@ define([
 				this.habitatScenarioButton.set("disabled", true);
 				this.habitatRangeSlider.set("disabled", true);
 				this.runScenarioButton.set("disabled", true);
-				this.windWaveButton.set("disabled", true);
-				this.windButton.set("disabled", true);
-				this.waveButton.set("disabled", true);
-				this.wavePeriodBox.set("disabled", true);
-				this.waveHeightBox.set("disabled", true);
-				this.hurricaneButton.set("disabled", true);
-				this.waterTypeButton.set("disabled", true);
-				this.seaLevelRiseButton.set("disabled", true);
-				this.tideLevelButton.set("disabled", true);
+				this.windWaveButton.disabled = true;
+				this.windButton.disabled = true;
+				this.waveButton.disabled = true;
+				this.wavePeriodBox.disabled = true;
+				this.waveHeightBox.disabled = true;
+				this.hurricaneButton.disabled = true;
+				this.waterTypeButton.disabled = true;
+				this.seaLevelRiseButton.disabled = true;
+				this.tideLevelButton.disabled = true;
 			}
 			
 			this.resetHabitatInterface = function() {
@@ -3201,21 +3602,20 @@ define([
 				domStyle.set(dijit.byId("coralReefPanel").getParent().id, "display","block");
 				domStyle.set(dijit.byId("mangrovePanel").getParent().id, "display","block");
 				domStyle.set(dijit.byId("underwaterStructurePanel").getParent().id, "display","block");
-				dijit.byId('habitatPane').resize({h:370});
+				dijit.byId('habitatPane').resize({h:380});
 				this.coralReefCheckBoxTooltip.set("label", "(Disabled) No habitat scenario chosen.");
 				this.mangroveCheckBoxTooltip.set("label", "(Disabled) No habitat scenario chosen.");
 				this.underwaterStructureCheckBoxTooltip.set("label", "(Disabled) No habitat scenario chosen.");
-				this.windWaveButton.set("label", "Oceanic");
+				this.windWaveButton.value = "Direct Input";
 				dojo.style("windContentDiv", "display", "none");
 				dojo.style("waveContentDiv", "display", "block");
 				dojo.style("hurricaneContentDiv", "display", "none");
-				this.waveButton.set("label", "Storm");
-				this.windButton.set("label", "Strong Storm");
-				this.hurricaneButton.set("label", "Category 1");
+				this.waveButton.value = "Storm";
+				this.windButton.value = "Strong Storm";
+				this.hurricaneButton.value = "C1";
 				this.waterTypeButtonOnChange("Tide");
-				//this.waterTypeButton.set("label", "Tide");
-				this.tideLevelButton.set("label", "Mean Sea Level");
-				this.seaLevelRiseButton.set("label", "Moderate");
+				this.tideLevelButton.value = 0; // == MSL
+				this.seaLevelRiseButton.value = 0.4; // == Moderate
 				this.setProfileSliderText('', false);
 				dijit.byId('habitatPane').selectChild('coralReefPanel');
 			}
@@ -3256,9 +3656,9 @@ define([
 							this.coralReefCheckBoxTooltip.set("label", "(Disabled) No coral reef habitat available to modify.");
 						}
 						
-						this.waterTypeButton.set("label", "Tide");
+						this.waterTypeButton.value = "Tide";
 						this.waterTypeButtonOnChange("Tide");
-						this.waterTypeButton.set("disabled", true);
+						this.waterTypeButton.disabled = true;
 						break;
 					case "Coral Reef & Sea Level Rise":
 						domStyle.set(dijit.byId("underwaterStructurePanel").getParent().id, "display","none");
@@ -3292,9 +3692,9 @@ define([
 							this.coralReefCheckBoxTooltip.set("label", "(Disabled) No coral reef habitat available to modify.");
 						}
 						
-						this.waterTypeButton.set("label", "Sea-Level Rise");
+						this.waterTypeButton.value = "Sea-Level Rise";
 						this.waterTypeButtonOnChange("Sea-Level Rise");
-						this.waterTypeButton.set("disabled", true);
+						this.waterTypeButton.disabled = true;
 						break;
 					case "Coral Reef & Artificial Reef Structures":
 						domStyle.set(dijit.byId("underwaterStructurePanel").getParent().id, "display","block");
@@ -3332,9 +3732,9 @@ define([
 							this.coralReefCheckBoxTooltip.set("label", "(Disabled) No coral reef habitat available to modify.");
 						}
 						
-						this.waterTypeButton.set("label", "Tide");
+						this.waterTypeButton.value = "Tide";
 						this.waterTypeButtonOnChange("Tide");
-						this.waterTypeButton.set("disabled", true);
+						this.waterTypeButton.disabled = true;
 						break;
 					case "Mangroves":
 						domStyle.set(dijit.byId("underwaterStructurePanel").getParent().id, "display","none");
@@ -3368,10 +3768,10 @@ define([
 							this.mangroveCheckBoxTooltip.set("label", "(Disabled) No mangrove habitat available to modify.");
 						}
 						
-						this.waterTypeButton.set("label", "Tide");
-						this.tideLevelButton.set("label", "Mean Higher High Water");
+						this.waterTypeButton.value = "Tide";
+						this.tideLevelButton.value = 0.875 // Mean Higher High Water;
 						this.waterTypeButtonOnChange("Tide");
-						this.waterTypeButton.set("disabled", true);
+						this.waterTypeButton.disabled = true;
 						break;
 					case "Coral Reef, Mangroves, & Artificial Reef Structures":
 						domStyle.set(dijit.byId("underwaterStructurePanel").getParent().id, "display","block");
@@ -3406,10 +3806,10 @@ define([
 							this.mangroveCheckBoxTooltip.set("label", "(Disabled) No mangrove habitat available to modify.");
 						}
 						
-						this.waterTypeButton.set("label", "Tide");
-						this.tideLevelButton.set("label", "Mean Higher High Water");
+						this.waterTypeButton.value = "Tide";
+						this.tideLevelButton.value = 0.875 // Mean Higher High Water;
 						this.waterTypeButtonOnChange("Tide");
-						this.waterTypeButton.set("disabled", true);
+						this.waterTypeButton.disabled = true;
 						
 						domStyle.set(dijit.byId("coralReefPanel").getParent().id, "display","block");
 						dijit.byId('habitatPane').selectChild('coralReefPanel');
@@ -3428,7 +3828,7 @@ define([
 						}
 						break;
 				}
-				dijit.byId('habitatPane').resize({h:370});
+				dijit.byId('habitatPane').resize({h:380});
 			}
 			
 			this.resetHabitatData = function() {
@@ -3583,7 +3983,7 @@ define([
 					
 					this.parameters.mangroveSeaEdgeEnd = _.min(mangroveValues);
 					
-					if ((this.waterTypeButton.get('label') == 'Tide') && (this.tideLevelButton.get('label') == 'Mean Lower Low Water' || this.tideLevelButton.get('label') == 'Mean Sea Level')) {
+					if ((this.waterTypeButton.value == 'Tide') && (this.tideLevelButton.value == 'Mean Lower Low Water' || this.tideLevelButton.value == 'Mean Sea Level')) {
 						this.mangroveCheckBox.set("disabled", true);
 						this.mangroveCheckBoxTooltip.set("label", "(Disabled) Mangrove habitat must be submerged to modify - set tide level to Mean Higher High Water or above.");
 					} else {
@@ -3783,16 +4183,16 @@ define([
 					"Shoreward_Limit": 0,
 					
 					//Wave Parameters
-					"Wave_Type": valueTranslate.wave[this.windWaveButton.get("label")],
+					"Wave_Type": this.windWaveButton.value,
 					"Wave_Height": this.waveHeightBox.get("value"),
 					"Wave_Period": this.wavePeriodBox.get("value"),
-					"Wind_Type": this.windButton.get("label"),
-					"Hurricane_Category": valueTranslate.hurricane[this.hurricaneButton.get("label")],
+					"Wind_Type": this.windButton.value,
+					"Hurricane_Category": this.hurricaneButton.value,
 					
 					//Water Parameters
-					"Sea_Level_Increase": this.waterTypeButton.get("label"),
-					"Sea-Level_Rise": this.seaLevelRiseButton.get("label"),
-					"Tide_Level": valueTranslate.tide[this.tideLevelButton.get("label")],
+					"Sea_Level_Increase": this.waterTypeButton.value,
+					"Sea-Level_Rise": this.seaLevelRiseButton.options[this.seaLevelRiseButton.selectedIndex].innerHTML,
+					"Tide_Level": valueTranslate[this.tideLevelButton.options[this.tideLevelButton.selectedIndex].innerHTML],
 					
 					//Habitat Parameters
 					//Coral Reef
@@ -4221,7 +4621,7 @@ define([
 				
 				
 				var resultsChartType = new DropDownMenu({ style: "display: none;"});
-				domClass.add(resultsChartType.domNode, "claro");
+				domClass.add(resultsChartType.domNode, "cr-dojo-dijits");
 
 				if (this.waveModelResults.messages.coral != null && this.waveModelResults.messages.coral != '') {
 					var menuItem = new MenuItem({

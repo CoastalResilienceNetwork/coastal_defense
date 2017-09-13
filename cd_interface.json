@@ -1,5 +1,5 @@
 {
-	"debug": true,
+	"debug": false,
 	"gpServiceUrl": {
 		"findProfile": "http://dev.services2.coastalresilience.org/arcgis/rest/services/CoastalDefense/CD_Find_Closest_Profile/GPServer/Find_Closest_Profile",
 		"runWaveModel": "http://dev.services2.coastalresilience.org/arcgis/rest/services/CoastalDefense/CD_Wave_Model/GPServer/Run_Wave_Model"
@@ -43,7 +43,7 @@
 			{"value":-2, "name":"Mean Lower Low Water", "id": "MLLW"},
 			{"value":0, "name":"Mean Sea Level", "id": "MSL"},
 			{"value":0.875, "name":"Mean Higher High Water", "id": "MHHW"},
-			{"value":1.423, "name":"Highest Observed", "id": "HObs"}				
+			{"value":1.423, "name":"Highest Observed", "id": "Highest Observed"}				
 		],
 	"seaLevel": [
 			{"value":0.2, "name":"Low", "id": "Low"},
