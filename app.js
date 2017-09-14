@@ -767,53 +767,6 @@ define([
 						self.regionSelect(this.value, key, self);
 					});
 					
-					/* 
-				    //Add Button to select region
-					var regionMenu = new DropDownMenu({ style: "display: none;"});
-					domClass.add(regionMenu.domNode, "cr-dojo-dijits");
-					
-					_.each(this._data[this.parameters.regionIndex].extents.subRegions, function(value, key){
-						self.key = key;
-						var menuItem = new MenuItem({
-							label: value.name,
-							onClick: function(){
-								self.regionButton.set("label", this.label);
-								self.regionSelect(this.label, key, self);
-								domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
-							}
-						});
-						regionMenu.addChild(menuItem);
-					});	
-
-					this.regionButton = new ComboButton({
-						label: "Region",
-						name: "regionButton",
-						dropDown: regionMenu,
-						id: "regionButton"
-					});
-					on(this.regionButton.domNode, "click", function(evt) {
-						var dropDown = self.regionButton.dropDown.domNode.parentNode;
-						window.setTimeout(function() {
-							if(dropDown) {
-								domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-							}
-						}, 100);
-					});
-					on(this.regionButton.focusNode, "mousedown", function(evt) {
-						var dropDown = self.regionButton.dropDown.domNode.parentNode;
-						window.setTimeout(function() {
-							if(dropDown) {
-								domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-							}
-						}, 100);
-					});
-					on(this.regionButton, "blur", function(evt) {
-						var dropDown = this.dropDown.domNode.parentNode;
-						domStyle.set(dropDown, { "display":"none" });
-					});
-					
-					regionDiv.appendChild(this.regionButton.domNode); */
-					
 					var chooseProfileButtonDiv = domConstruct.create("div", { id:"chooseProfileButtonDiv" });
 					regionUnitsContentDiv.appendChild(chooseProfileButtonDiv);
 				
@@ -883,82 +836,6 @@ define([
 							break;
 					}
 				});
-				
-				
-				/* 
-				
-				
-				var windWaveMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(windWaveMenu.domNode, "cr-dojo-dijits");
-			
-				_.each(this._interface.waveType, function(value, key){
-						var menuItem = new MenuItem({
-							label: value.name,
-							onClick: function(){
-								//this.parameters.windWaveBtnLabel = this.label;
-								self.windWaveButton.set("label", this.label);
-								
-								switch (this.label) {
-									case "Direct":
-										dojo.style("windContentDiv", "display", "none");
-										dojo.style("waveContentDiv", "display", "block");
-										dojo.style("hurricaneContentDiv", "display", "none");
-										break;
-									case "Oceanic":
-										dojo.style("windContentDiv", "display", "none");
-										dojo.style("waveContentDiv", "display", "block");
-										dojo.style("hurricaneContentDiv", "display", "none");
-										break;
-									case "Wind-Wave":
-										dojo.style("windContentDiv", "display", "block");
-										dojo.style("waveContentDiv", "display", "none");
-										dojo.style("hurricaneContentDiv", "display", "none");
-										break;
-									case "Hurricane":
-										dojo.style("windContentDiv", "display", "none");
-										dojo.style("waveContentDiv", "display", "none");
-										dojo.style("hurricaneContentDiv", "display", "block");
-										break;
-								}
-								
-								domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
-							}
-						});
-					windWaveMenu.addChild(menuItem);
-				});
-
-				this.windWaveButton = new ComboButton({
-					label: "Oceanic",
-					name: "windWaveButton",
-					dropDown: windWaveMenu,
-					id: "windWaveButton",
-					disabled: true
-				});
-				on(this.windWaveButton.domNode, "click", function(evt) {
-					var dropDown = self.windWaveButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.windWaveButton.focusNode, "mousedown", function(evt) {
-					var dropDown = self.windWaveButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.windWaveButton, "blur", function(evt) {
-					var dropDown = this.dropDown.domNode.parentNode;
-					domStyle.set(dropDown, { "display":"none" });
-				});
-
-				waveTypeDiv.appendChild(this.windWaveButton.domNode); */
-				
-				/* var waveTypeHelpDiv = domConstruct.create("div", {innerHTML: "<span>?</span>", id:"waveTypeHelp", style: "position:absolute; width: 20px; height: 20px; font-size: 14px; right: 20px; top: 0px;" });
-				windWaveContentDiv.appendChild(waveTypeHelpDiv); */
 
 				var waveContentDiv = domConstruct.create("div", {id:"waveContentDiv", style: "position: relative;"});
 				windWaveContentDiv.appendChild(waveContentDiv);
@@ -1009,8 +886,6 @@ define([
 				var waveComboLabel = domConstruct.create("div", {innerHTML: "Wave Strength:", id:"waveComboLabel"});
 				waveContentDiv.appendChild(waveComboLabel);	
 				
-				
-				
 				var waveButtonDiv = domConstruct.create("div", { 
 					className: "styled-select",
 					style:"width:125px;display:inline-block;" 
@@ -1024,55 +899,6 @@ define([
 					self.wavePeriodBox.set("value", self.parameters.wave[this.value].period);
 				});
 				
-				/* 
-
-				var waveMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(waveMenu.domNode, "cr-dojo-dijits");
-				_.each(this._interface.waves, function(value, key){
-					var menuItem = new MenuItem({
-						label: value.name,
-						onClick: function(){
-							self.waveButton.set("label", this.label);
-							self.waveHeightBox.set("value", self.parameters.wave[this.label].height);
-							self.wavePeriodBox.set("value", self.parameters.wave[this.label].period);
-							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
-						}
-					});
-				
-					waveMenu.addChild(menuItem);
-				});
-				
-				this.waveButton = new ComboButton({
-					label: "Storm",
-					name: "waveButton",
-					dropDown: waveMenu,
-					id: "waveButton",
-					disabled: true
-				});
-				
-				on(this.waveButton.domNode, "click", function(evt) {
-					var dropDown = self.waveButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.waveButton.focusNode, "mousedown", function(evt) {
-					var dropDown = self.waveButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.waveButton, "blur", function(evt) {
-					var dropDown = this.dropDown.domNode.parentNode;
-					domStyle.set(dropDown, { "display":"none" });
-				});
-			
-				waveContentDiv.appendChild(this.waveButton.domNode);
- */
 				var windContentDiv = domConstruct.create("div", { id:"windContentDiv", style:"display:none;"});
 				windWaveContentDiv.appendChild(windContentDiv);	
 
@@ -1088,50 +914,6 @@ define([
 					domConstruct.create("option", { innerHTML: value.name, value: value.value }, self.windButton);
 				});
 
-				/* var windMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(windMenu.domNode, "cr-dojo-dijits");
-				_.each(this._interface.winds, function(value, key){
-					var menuItem = new MenuItem({
-						label: value.name,
-						onClick: function(){
-							self.windButton.set("label", this.label);
-							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
-						}
-					});
-				
-					windMenu.addChild(menuItem);
-				});
-				
-				this.windButton = new ComboButton({
-					label: "Strong Storm",
-					name: "windButton",
-					dropDown: windMenu,
-					id: "windButton",
-					disabled: true
-				});
-				on(this.windButton.domNode, "click", function(evt) {
-					var dropDown = self.windButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.windButton.focusNode, "mousedown", function(evt) {
-					var dropDown = self.windButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.windButton, "blur", function(evt) {
-					var dropDown = this.dropDown.domNode.parentNode;
-					domStyle.set(dropDown, { "display":"none" });
-				});
-			
-				windContentDiv.appendChild(this.windButton.domNode);
-				 */
 				var hurricaneContentDiv = domConstruct.create("div", { id:"hurricaneContentDiv", style:"display:none;"});
 				windWaveContentDiv.appendChild(hurricaneContentDiv);
 
@@ -1148,50 +930,6 @@ define([
 					domConstruct.create("option", { innerHTML: value.name, value: value.value }, self.hurricaneButton);
 				});
 				
-
-				/* var hurricaneMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(hurricaneMenu.domNode, "cr-dojo-dijits");
-				_.each(this._interface.hurricane, function(value, key){
-					var menuItem = new MenuItem({
-						label: value.name,
-						onClick: function(){
-							self.hurricaneButton.set("label", this.label);
-							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
-						}
-					});
-					hurricaneMenu.addChild(menuItem);
-				});
-				
-				this.hurricaneButton = new ComboButton({
-					label: "Category 1",
-					name: "hurricaneButton",
-					dropDown: hurricaneMenu,
-					id: "hurricaneButton",
-					disabled: true
-				});
-				on(this.hurricaneButton.domNode, "click", function(evt) {
-					var dropDown = self.hurricaneButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.hurricaneButton.focusNode, "mousedown", function(evt) {
-					var dropDown = self.hurricaneButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.hurricaneButton, "blur", function(evt) {
-					var dropDown = this.dropDown.domNode.parentNode;
-					domStyle.set(dropDown, { "display":"none" });
-				});
-			
-				hurricaneContentDiv.appendChild(this.hurricaneButton.domNode);				
-				 */
 				wavePanel.set('content', windWaveContentDiv);	
 				//END ADD WAVE PANEL CONTENT
 			}
@@ -1226,50 +964,6 @@ define([
 				on(this.waterTypeButton, "change", function() {
 					self.waterTypeButtonOnChange(this.value);
 				});
-				
-				/* var waterTypeMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(waterTypeMenu.domNode, "cr-dojo-dijits");
-			
-				_.each(this._interface.waterType, function(value, key){
-					var menuItem = new MenuItem({
-						label: value.name,
-						onClick: function(){
-							self.waterTypeButtonOnChange(this.label);
-							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
-						}
-					});
-					waterTypeMenu.addChild(menuItem);
-				});
-
-				this.waterTypeButton = new ComboButton({
-					label: "Tide",
-					name: "waterTypeButton",
-					dropDown: waterTypeMenu,
-					id: "waterTypeButton",
-					disabled: true
-				});
-				on(this.waterTypeButton.domNode, "click", function(evt) {
-					var dropDown = self.waterTypeButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.waterTypeButton.focusNode, "mousedown", function(evt) {
-					var dropDown = self.waterTypeButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.waterTypeButton, "blur", function(evt) {
-					var dropDown = this.dropDown.domNode.parentNode;
-					domStyle.set(dropDown, { "display":"none" });
-				});
-
-				waterTypeDiv.appendChild(this.waterTypeButton.domNode); */
 
 				var seaLevelRiseContentDiv = domConstruct.create("div", {id:"seaLevelRiseContentDiv", style: "display: none;"});
 				waterContentDiv.appendChild(seaLevelRiseContentDiv);
@@ -1286,53 +980,6 @@ define([
 				array.forEach(this._interface.seaLevel, function(value) {
 					domConstruct.create("option", { innerHTML: value.name, value: value.value }, self.seaLevelRiseButton);
 				});
-				
-/* 
-				var seaLevelRiseMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(seaLevelRiseMenu.domNode, "cr-dojo-dijits");
-			
-				_.each(this._interface.seaLevel, function(value, key){
-					var menuItem = new MenuItem({
-						label: value.name,
-						onClick: function(){
-							self.seaLevelRiseButton.set("label", this.label);
-							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
-						}
-					});
-					seaLevelRiseMenu.addChild(menuItem);
-				});
-
-				this.seaLevelRiseButton = new ComboButton({
-					label: "Moderate",
-					name: "seaLevelRiseButton",
-					dropDown: seaLevelRiseMenu,
-					id: "seaLevelRiseButton",
-					disabled: true
-				});
-				on(this.seaLevelRiseButton.domNode, "click", function(evt) {
-					var dropDown = self.seaLevelRiseButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.seaLevelRiseButton.focusNode, "mousedown", function(evt) {
-					var dropDown = self.seaLevelRiseButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.seaLevelRiseButton, "blur", function(evt) {
-					var dropDown = this.dropDown.domNode.parentNode;
-					domStyle.set(dropDown, { "display":"none" });
-				});
-
-				//this.parameters.waterLevelKey = 3;  //Pre-set mhhw as the default and assign key - may want to include default values in json file at some point
-				
-				seaLevelRiseContentDiv.appendChild(this.seaLevelRiseButton.domNode); */
 
 				//Create Stormsurge Drop down button
 				
@@ -1363,63 +1010,6 @@ define([
 						self.mangroveCheckBoxTooltip.set("label", "Check to set a mangrove restoration scenario. Uncheck to run under current conditions.");
 					}
 				});
-
-				/* var tideLevelMenu = new DropDownMenu({ style: "display: none;"});
-				domClass.add(tideLevelMenu.domNode, "cr-dojo-dijits");
-			
-				_.each(this._interface.tideLevel, function(value, key){
-					var menuItem = new MenuItem({
-						label: value.name,
-						onClick: function(){
-							self.tideLevelButton.set("label", this.label);
-							if (this.label == 'Mean Lower Low Water' || this.label == 'Mean Sea Level') {
-								self.mangroveCheckBox.set("checked", false);
-								if (self.profileChart.getSeries("Mangrove (future)")) {
-									self.onHabitatCheckboxChange('mangrove', self.mangroveCheckBox);
-								}
-								self.mangroveCheckBox.set("disabled", true);
-								self.mangroveCheckBoxTooltip.set("label", "(Disabled) Mangrove habitat must be submerged to modify - set tide level to Mean Higher High Water or above.");
-							} else {
-								self.mangroveCheckBox.set("disabled", false);
-								self.mangroveCheckBoxTooltip.set("label", "Check to set a mangrove restoration scenario. Uncheck to run under current conditions.");
-							}
-							domStyle.set(this.getParent().domNode.parentNode, { "display":"none" });
-						}
-					});
-					tideLevelMenu.addChild(menuItem);
-				});
-
-				this.tideLevelButton = new ComboButton({
-					label: "Mean Sea Level",
-					name: "tideLevelButton",
-					dropDown: tideLevelMenu,
-					id: "tideLevelButton",
-					disabled: true
-				});
-				on(this.tideLevelButton.domNode, "click", function(evt) {
-					var dropDown = self.tideLevelButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.tideLevelButton.focusNode, "mousedown", function(evt) {
-					var dropDown = self.tideLevelButton.dropDown.domNode.parentNode;
-					window.setTimeout(function() {
-						if(dropDown) {
-							domStyle.set(dropDown, { "display":"block", "z-index": 10000 });
-						}
-					}, 100);
-				});
-				on(this.tideLevelButton, "blur", function(evt) {
-					var dropDown = this.dropDown.domNode.parentNode;
-					domStyle.set(dropDown, { "display":"none" });
-				});
-				
-				//this.parameters.surgeLevelKey = 0;  //Pre-set mhhw as the default and assign key - may want to include default values in json file at some point
-			
-				tideLevelContentDiv.appendChild(this.tideLevelButton.domNode); */
 				
 				waterPanel.set('content', waterContentDiv);
 			}
