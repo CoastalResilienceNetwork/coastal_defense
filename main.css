@@ -879,6 +879,8 @@ background-color: #ccd5d5;
 border: 1px solid #ccd5d5;
 color: #555;
 background-image:none !important;
+box-shadow:none;
+-webkit-box-shadow:none;
 }
 
 .plugin-cd div.dijitTooltipConnector  {
@@ -926,6 +928,8 @@ background-color: #ccd5d5;
 border: 1px solid #ccd5d5;
 color: #555;
 background-image:none !important;
+box-shadow:none;
+-webkit-box-shadow:none;
 }
 
 #dijit__MasterTooltip_0 div.dijitTooltipConnector  {
