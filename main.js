@@ -12,12 +12,7 @@ require({
 	        name: "jquery",
 	        location: "//ajax.googleapis.com/ajax/libs/jquery/1.9.0",
 	        main: "jquery.min"
-	    },
-		{
-	        name: "underscore",
-	        location: "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3",
-	        main: "underscore-min"
-	    },
+	    }
         {
             name: "jquery_ui",
             location: "//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1",
