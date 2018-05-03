@@ -12,7 +12,7 @@ require({
 	        name: "jquery",
 	        location: "//ajax.googleapis.com/ajax/libs/jquery/1.9.0",
 	        main: "jquery.min"
-	    }
+	    },
         {
             name: "jquery_ui",
             location: "//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1",
