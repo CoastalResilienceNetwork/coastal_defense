@@ -7,24 +7,12 @@ require({
     // The calls to location.pathname.replace() below prepend the app's root path to the specified library location. 
     // Otherwise, since Dojo is loaded from a CDN, it will prepend the CDN server path and fail, as described in
     // https://dojotoolkit.org/documentation/tutorials/1.7/cdn
-    packages: [
-	    {
-	        name: "jquery",
-	        location: "//ajax.googleapis.com/ajax/libs/jquery/1.9.0",
-	        main: "jquery.min"
-	    }
-        {
-            name: "jquery_ui",
-            location: "//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1",
-            main: "jquery-ui.min"
-        }
-    ]
+    packages: []
 });
 
 define([
         "dojo/_base/declare",
         "framework/PluginBase",
-		"jquery",
 		"dojo/parser",
 		"dijit/registry",
 		"dojo/dom-class",
@@ -36,7 +24,7 @@ define([
 		"dojo/text!plugins/coastal_defense/cd_region.json",
 		"dojo/text!plugins/coastal_defense/cd_interface.json"
        ],
-       function (declare, PluginBase, $, parser, registry, domClass, domStyle, lang, query, _, cd, configFile, interfaceConfigFile) {
+       function (declare, PluginBase, parser, registry, domClass, domStyle, lang, query, _, cd, configFile, interfaceConfigFile) {
            return declare(PluginBase, {
                toolbarName: "Coastal Defense",
                toolbarType: "sidebar",
